@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flor Do Luar</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+</head>
+
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="brand">
+                <span class="brand-icon">
+                    <img src="Flor Do Luar.png" alt="Logo" width="42px" height="42px">
+                </span>
+                <div class="brand-text">
+                    <h1>Flor Do Luar</h1>
+                    <span class="brand-subtitle">Mercearia e Logística</span>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <button data-page="estoque" class="nav-btn active">📦 Estoque</button>
+                <button data-page="vendas" class="nav-btn">🛒 Vendas</button>
+                <button data-page="creditos" class="nav-btn">📒 Caderneta</button>
+                <button data-page="reposicao" class="nav-btn">📋 Reposição</button>
+            </nav>
+        </header>
+
+        <main class="main-content">
+            <!-- Painel de Alertas de Estoque Crítico -->
+            <div id="painel-alertas-container"></div>
+
+            <!-- Página: Estoque -->
+            <section id="page-estoque" class="page active">
+                <div class="page-header">
+                    <h2>Gestão de Estoque</h2>
+                    <div style="display:flex;gap:0.5rem;">
+                        <button class="btn btn-secondary" onclick="App.resetarDados()" title="Resetar dados (debug)">🔄
+                            Reset</button>
+                        <button class="btn btn-primary" onclick="estoque.abrirModal()">+ Novo Item</button>
+                    </div>
+                </div>
+
+                <!-- Cards de Categorias Visuais -->
+                <div class="categorias-dashboard">
+                    <div class="cat-card" data-cat="rancho" onclick="estoque.filtrarPorCard('rancho')">
+                        <div class="cat-icon">🍚</div>
+                        <div class="cat-info">
+                            <span class="cat-nome">Rancho</span>
+                            <span class="cat-qtd" data-qtd-rancho>0 itens</span>
+                        </div>
+                    </div>
+                    <div class="cat-card cat-bebidas" data-cat="bebidas" onclick="estoque.filtrarPorCard('bebidas')">
+                        <div class="cat-icon">🥤</div>
+                        <div class="cat-info">
+                            <span class="cat-nome">Bebidas</span>
+                            <span class="cat-qtd" data-qtd-bebidas>0 itens</span>
+                        </div>
+                        <div class="cat-badge">Alto Giro</div>
+                    </div>
+                    <div class="cat-card" data-cat="vestuario" onclick="estoque.filtrarPorCard('vestuario')">
+                        <div class="cat-icon">👕</div>
+                        <div class="cat-info">
+                            <span class="cat-nome">Linha Mata</span>
+                            <span class="cat-qtd" data-qtd-vestuario>0 itens</span>
+                        </div>
+                    </div>
+                    <div class="cat-card" data-cat="ferramentas" onclick="estoque.filtrarPorCard('ferramentas')">
+                        <div class="cat-icon">🎣</div>
+                        <div class="cat-info">
+                            <span class="cat-nome">Pesca</span>
+                            <span class="cat-qtd" data-qtd-ferramentas>0 itens</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filtros">
+                    <button class="filter-btn active" data-filter="todos">Todos</button>
+                    <button class="filter-btn" data-filter="rancho">🍚 Rancho</button>
+                    <button class="filter-btn" data-filter="bebidas">🥤 Bebidas</button>
+                    <button class="filter-btn" data-filter="vestuario">👕 Linha Mata</button>
+                    <button class="filter-btn" data-filter="manutencao">🔧 Manutenção</button>
+                    <button class="filter-btn" data-filter="ferramentas">🎣 Ferragens/Pesca</button>
+                    <button class="filter-btn" data-filter="escola">📚 EDS</button>
+                </div>
+
+                <div class="estoque-grid" id="estoque-grid"></div>
+            </section>
+
+            <!-- Página: Vendas -->
+            <section id="page-vendas" class="page">
+                <div class="vendas-layout">
+                    <div class="vendas-produtos">
+                        
+                        <div class="filtros">
+                            <button class="filter-btn active" data-filter-venda="todos">Todos</button>
+                            <button class="filter-btn" data-filter-venda="rancho">🍚 Rancho</button>
+                            <button class="filter-btn" data-filter-venda="bebidas">🥤 Bebidas</button>
+                            <button class="filter-btn" data-filter-venda="vestuario">👕 Linha Mata</button>
+                            <button class="filter-btn" data-filter-venda="manutencao">🔧 Manutenção</button>
+                            <button class="filter-btn" data-filter-venda="ferramentas">🎣 Ferragens/Pesca</button>
+                            <button class="filter-btn" data-filter-venda="escola">📚 EDS</button>
+                        </div>
+
+                        <div class="produtos-venda-grid" id="produtos-venda-grid"></div>
+                    </div>
+
+                    <div class="vendas-carrinho">
+                        <div class="carrinho-header">
+                            <h3>🛍️ Carrinho</h3>
+                            <button id="btn-limpar-carrinho" class="btn-icon" title="Limpar" onclick="if(window.vendas)vendas.limparCarrinho();else alert('Erro: sistema não carregou');">🗑️</button>
+                        </div>
+
+                        <div class="carrinho-itens" id="carrinho-itens">
+                            <div class="carrinho-vazio">
+                                <span>🛒</span>
+                                <p>Carrinho vazio</p>
+                            </div>
+                        </div>
+
+                        <div class="carrinho-totais">
+                            <div class="total-row">
+                                <span>Subtotal:</span>
+                                <strong id="carrinho-subtotal">R$ 0,00</strong>
+                            </div>
+                            <div class="total-row destaque">
+                                <span>TOTAL:</span>
+                                <strong id="carrinho-total">R$ 0,00</strong>
+                            </div>
+                        </div>
+
+                        <div class="carrinho-acoes">
+                            <button id="btn-finalizar-venda" class="btn btn-success btn-large btn-full" onclick="if(window.vendas && window.vendas.carrinho && window.vendas.carrinho.length > 0){vendas.finalizarVenda(false);}else if(window.vendas){alert('Carrinho vazio! Adicione itens primeiro.');}else{alert('Erro: sistema não carregou. Recarregue a página.');}">
+                                💰 Finalizar Venda
+                            </button>
+                            <button id="btn-caderneta" class="btn btn-secondary btn-full" onclick="if(window.vendas && window.vendas.carrinho && window.vendas.carrinho.length > 0){vendas.finalizarVenda(true);}else if(window.vendas){alert('Carrinho vazio! Adicione itens primeiro.');}else{alert('Erro: sistema não carregou. Recarregue a página.');}">
+                                📒 Venda na Caderneta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Página: Caderneta/Créditos -->
+            <section id="page-creditos" class="page">
+                <div class="page-header">
+                    <h2>Caderneta de Crédito</h2>
+                    <button class="btn btn-primary" onclick="creditos.abrirModalCliente()">+ Novo Cliente</button>
+                </div>
+
+                <div class="creditos-resumo">
+                    <div class="resumo-card">
+                        <span>Total a Receber</span>
+                        <strong id="total-receber">R$ 0,00</strong>
+                    </div>
+                    <div class="resumo-card">
+                        <span>Clientes Ativos</span>
+                        <strong id="total-clientes">0</strong>
+                    </div>
+                </div>
+
+                <div class="clientes-list" id="clientes-list"></div>
+            </section>
+
+            <!-- Página: Reposição -->
+            <section id="page-reposicao" class="page">
+                <div class="page-header">
+                    <h2>📋 Lista de Reposição</h2>
+                    <div style="display:flex;gap:0.5rem;">
+                        <button class="btn btn-secondary" onclick="relatorios.atualizarListaReposicao()">🔄 Atualizar</button>
+                        <button class="btn btn-primary" onclick="relatorios.imprimirListaReposicao()">🖨️ Imprimir</button>
+                    </div>
+                </div>
+
+                <div class="reposicao-card">
+                    <div class="reposicao-info" style="text-align:center;margin-bottom:1.5rem;padding:1.5rem;background:var(--light);border-radius:0.5rem;">
+                        <p style="margin:0;color:var(--gray);font-size:0.95rem;">Período: <strong id="reposicao-page-periodo">-</strong></p>
+                        <p style="margin:0.5rem 0 0 0;color:var(--gray);font-size:0.9rem;">
+                            Total de vendas no mês: <strong id="reposicao-page-total">0</strong> unidades
+                        </p>
+                    </div>
+
+                    <div id="reposicao-page-vazio" style="display:none;text-align:center;padding:3rem;color:var(--gray);">
+                        <p style="font-size:4rem;margin-bottom:1rem;">📭</p>
+                        <p style="font-size:1.1rem;">Nenhuma venda registrada neste mês.</p>
+                        <p style="font-size:0.9rem;margin-top:0.5rem;">Realize vendas na aba "Vendas" para gerar a lista de reposição.</p>
+                    </div>
+
+                    <div id="reposicao-page-conteudo">
+                        <table class="table-reposicao" style="width:100%;border-collapse:collapse;">
+                            <thead>
+                                <tr style="background:var(--primary);color:white;">
+                                    <th style="padding:12px;text-align:left;border-radius:0.5rem 0 0 0;">Produto</th>
+                                    <th style="padding:12px;text-align:center;">Categoria</th>
+                                    <th style="padding:12px;text-align:center;border-radius:0 0.5rem 0 0;">Qtde Vendida</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reposicao-page-tbody">
+                                <!-- Preenchido via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal: Novo/Editar Item -->
+    <div class="modal" id="modal-item">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-item-title">Novo Item</h3>
+                <button class="btn-close" onclick="estoque.fecharModal()">×</button>
+            </div>
+            <form id="form-item" onsubmit="estoque.salvar(event)">
+                <input type="hidden" id="item-id">
+                <div class="form-group">
+                    <label>Nome do Item</label>
+                    <input type="text" id="item-nome" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select id="item-categoria" required onchange="estoque.onCategoriaChange(this.value)">
+                            <option value="rancho">🍚 Rancho</option>
+                            <option value="bebidas">🥤 Bebidas</option>
+                            <option value="vestuario">👕 Linha Mata</option>
+                            <option value="manutencao">🔧 Manutenção</option>
+                            <option value="ferramentas">🎣 Ferragens/Pesca</option>
+                            <option value="escola">📚 EDS</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantidade</label>
+                        <input type="number" id="item-quantidade" min="0" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Custo de Compra (R$)</label>
+                        <input type="number" id="item-custo" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Frete (R$)</label>
+                        <input type="number" id="item-frete" step="0.01" min="0" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Preço de Venda (R$)</label>
+                    <input type="number" id="item-preco" step="0.01" min="0" required>
+                </div>
+                <div class="form-group" id="grupo-unidade" style="display:none;">
+                    <label>Nível de Venda</label>
+                    <select id="item-unidade-nivel" onchange="estoque.onNivelChange(this.value)">
+                        <option value="">-- Selecione --</option>
+                        <option value="fardo">📦 Fardo (Atacado/Grande)</option>
+                        <option value="grande">🍾 Grande (Galão 20L)</option>
+                        <option value="medio">🧃 Médio (Pet 2L)</option>
+                        <option value="tamanho">🥫 Pequeno (Lata 350ml)</option>
+                        <option value="caçulinha">🥤 Caçulinha (200ml)</option>
+                    </select>
+                    <small class="form-hint">Selecione o tipo de embalagem para cálculo proporcional de frete</small>
+                </div>
+                <div class="form-group" id="grupo-tipo-bebida" style="display:none;">
+                    <label>Tipo/Tamanho Específico</label>
+                    <select id="item-tipo-bebida" data-tipo-bebida>
+                        <option value="">-- Selecione o formato --</option>
+                        <option value="lata">🥫 Lata 350ml</option>
+                        <option value="lata_473">🥫 Lata 473ml</option>
+                        <option value="pet_1l">🧃 Pet 1L</option>
+                        <option value="pet_2l">🧃 Pet 2L</option>
+                        <option value="pet_2_5l">🧃 Pet 2,5L</option>
+                        <option value="galao_5l">🍶 Galão 5L</option>
+                        <option value="galao_10l">🍶 Galão 10L</option>
+                        <option value="galao_20l">🍾 Galão 20L</option>
+                        <option value="caculinha">🥤 Caçulinha 200ml</option>
+                        <option value="long_neck">🍺 Long Neck 330ml</option>
+                        <option value="garrafa_600">🍾 Garrafa 600ml</option>
+                    </select>
+                    <small class="form-hint">Formato específico para identificação visual no estoque</small>
+                </div>
+                <div class="form-group" id="grupo-frete-proporcional" style="display:none;">
+                    <label>Frete Proporcional por Unidade (R$)</label>
+                    <input type="number" id="item-frete-proporcional" step="0.01" min="0" readonly data-frete-calculado>
+                    <small class="form-hint">Calculado automaticamente com base no fardo</small>
+                </div>
+                <div class="form-group" id="grupo-multiplicador" style="display:none;">
+                    <label>Quantidade por Embalagem</label>
+                    <input type="number" id="item-unidades-por-embalagem" min="1" value="1" data-unidades-embalagem>
+                    <small class="form-hint">Ex: Fardo com 12 unidades = 12x no estoque</small>
+                </div>
+                <div class="form-group">
+                    <label>Estoque Mínimo</label>
+                    <input type="number" id="item-minimo" min="0" value="5">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="estoque.fecharModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Novo Cliente -->
+    <div class="modal" id="modal-cliente">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Novo Cliente</h3>
+                <button class="btn-close" onclick="creditos.fecharModalCliente()">×</button>
+            </div>
+            <form id="form-cliente" onsubmit="creditos.salvarCliente(event)">
+                <input type="hidden" id="cliente-id">
+                <div class="form-group">
+                    <label>Nome do Cliente</label>
+                    <input type="text" id="cliente-nome" required>
+                </div>
+                <div class="form-group">
+                    <label>Contato</label>
+                    <input type="text" id="cliente-contato" placeholder="Telefone ou localização">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary"
+                        onclick="creditos.fecharModalCliente()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Lançamento na Caderneta -->
+    <div class="modal" id="modal-lancamento">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Lançar na Caderneta</h3>
+                <button class="btn-close" onclick="creditos.fecharModalLancamento()">×</button>
+            </div>
+            <form id="form-lancamento" onsubmit="creditos.salvarLancamento(event)">
+                <input type="hidden" id="lancamento-cliente-id">
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <input type="text" id="lancamento-cliente-nome" readonly>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tipo</label>
+                        <select id="lancamento-tipo" required>
+                            <option value="venda">📦 Venda (Débito)</option>
+                            <option value="pagamento">💰 Pagamento (Crédito)</option>
+                            <option value="troca">🔧 Troca de Produtos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Valor (R$)</label>
+                        <input type="number" id="lancamento-valor" step="0.01" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <input type="text" id="lancamento-descricao"
+                        placeholder="Ex: 2 sacos de arroz, pagamento parcial...">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary"
+                        onclick="creditos.fecharModalLancamento()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Lançar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Nota/Comprovante -->
+    <div class="modal" id="modal-nota">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>🧾 Comprovante de Venda</h3>
+                <button class="btn-close" onclick="vendas.fecharNota()">×</button>
+            </div>
+            <div class="nota-conteudo" id="nota-conteudo">
+                <!-- Conteúdo gerado dinamicamente -->
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="vendas.fecharNota()">Fechar</button>
+                <button type="button" class="btn btn-primary" onclick="vendas.imprimirNota()">🖨️ Imprimir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEMPLATES PARA RENDERIZAÇÃO DINÂMICA -->
+
+    <!-- Template: Estado Vazio -->
+    <template id="tpl-empty-state">
+        <div class="empty-state">
+            <div class="empty-state-icon" data-icon></div>
+            <p data-message></p>
+        </div>
+    </template>
+
+    <!-- Template: Card de Estoque -->
+    <template id="tpl-estoque-card">
+        <div class="estoque-card" data-card>
+            <div class="card-header">
+                <span class="categoria-badge" data-categoria></span>
+                <div class="estoque-badge" data-estoque-badge>
+                    <span data-estoque-text></span>
+                </div>
+            </div>
+            <h3 data-nome></h3>
+            <div class="card-info">
+                <div class="info-row">
+                    <span>Estoque:</span>
+                    <strong data-quantidade></strong>
+                </div>
+                <div class="info-row">
+                    <span>Custo Chegada:</span>
+                    <strong data-custo></strong>
+                </div>
+                <div class="info-row">
+                    <span>Preço Venda:</span>
+                    <strong data-preco></strong>
+                </div>
+            </div>
+            <div class="card-actions">
+                <button class="btn btn-sm btn-secondary" data-action="edit">✏️</button>
+                <button class="btn btn-sm btn-danger" data-action="delete">🗑️</button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template: Card de Produto (Vendas) -->
+    <template id="tpl-produto-venda">
+        <div class="produto-card" data-card>
+            <div class="produto-categoria" data-categoria></div>
+            <h4 data-nome></h4>
+            <div class="produto-preco" data-preco></div>
+            <div class="produto-estoque">
+                <span data-disponivel></span> disponíveis
+            </div>
+            <button class="btn btn-primary btn-full" data-action="add">
+                🛒 Adicionar
+            </button>
+        </div>
+    </template>
+
+    <!-- Template: Item do Carrinho -->
+    <template id="tpl-carrinho-item">
+        <div class="carrinho-item" data-item>
+            <div class="carrinho-item-info">
+                <div class="carrinho-item-nome" data-nome></div>
+                <div class="carrinho-item-preco" data-preco-unit></div>
+            </div>
+            <div class="carrinho-item-controls">
+                <button class="btn-qtd" data-action="minus">−</button>
+                <span data-quantidade></span>
+                <button class="btn-qtd" data-action="plus">+</button>
+                <button class="btn-remove" data-action="remove">×</button>
+            </div>
+            <div class="carrinho-item-total" data-subtotal></div>
+        </div>
+    </template>
+
+    <!-- Template: Card de Cliente -->
+    <template id="tpl-cliente-card">
+        <div class="cliente-card" data-card>
+            <div class="cliente-header">
+                <div class="cliente-info">
+                    <h4 data-nome></h4>
+                    <span class="cliente-contato" data-contato></span>
+                </div>
+                <span class="saldo-badge" data-saldo-badge>
+                    <span data-saldo-text></span> <span data-saldo-valor></span>
+                </span>
+            </div>
+            <div class="cliente-actions">
+                <button class="btn btn-primary" data-action="lancar">📋 Lançar</button>
+                <button class="btn btn-secondary" data-action="historico">📜 Histórico</button>
+                <button class="btn btn-icon" data-action="delete" title="Excluir">🗑️</button>
+            </div>
+            <div class="lancamentos-list" data-lancamentos></div>
+        </div>
+    </template>
+
+    <!-- Template: Painel de Alertas -->
+    <template id="tpl-painel-alertas">
+        <div class="painel-alertas" id="painel-alertas-estoque">
+            <div class="alertas-header">
+                <span class="alertas-titulo">🚨 Alertas de Estoque Crítico (Reposição Manaus)</span>
+                <button class="btn-close" data-action="close">×</button>
+            </div>
+            <div class="alertas-lista" data-lista></div>
+        </div>
+    </template>
+
+    <!-- Template: Item de Alerta -->
+    <template id="tpl-alerta-item">
+        <div class="alerta-item" data-item>
+            <div class="alerta-info">
+                <strong data-nome></strong>
+                <span data-categoria></span>
+                <span class="alerta-qtd">Estoque: <span data-quantidade></span> un</span>
+            </div>
+            <div class="alerta-actions">
+                <button class="btn btn-sm btn-secondary" data-action="visto">👁️ Visto</button>
+                <button class="btn btn-sm btn-success" data-action="resolver">✅ Resolvido</button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template: Comprovante de Venda -->
+    <template id="tpl-nota-fiscal">
+        <div class="nota-fiscal">
+            <div class="nota-header">
+                <h2>FLOR DO LUAR</h2>
+                <p>Mercearia e Logística</p>
+                <p class="nota-data" data-data></p>
+            </div>
+            <div class="nota-divider"></div>
+            <div class="nota-cliente">
+                <p><strong>Cliente:</strong> <span data-cliente></span></p>
+            </div>
+            <div class="nota-itens">
+                <table class="nota-tabela">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Qtd</th>
+                            <th>Unit</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody data-itens></tbody>
+                </table>
+            </div>
+            <div class="nota-divider"></div>
+            <div class="nota-totais">
+                <div class="nota-total-row">
+                    <span>TOTAL:</span>
+                    <strong data-total></strong>
+                </div>
+            </div>
+            <div class="nota-footer">
+                <p>Obrigado pela preferência!</p>
+                <p data-hora></p>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template: Linha de Item da Nota -->
+    <template id="tpl-nota-item-row">
+        <tr data-row>
+            <td data-nome></td>
+            <td data-qtd></td>
+            <td data-unit></td>
+            <td data-total></td>
+        </tr>
+    </template>
+
+    <!-- Modal: Lista de Reposição -->
+    <div id="modal-reposicao" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>📋 Lista de Reposição</h3>
+                <button class="btn-close" onclick="relatorios.fecharModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="reposicao-conteudo">
+                <div
+                    style="text-align:center;margin-bottom:1.5rem;padding:1rem;background:var(--light);border-radius:0.5rem;">
+                    <p style="margin:0;color:var(--gray);font-size:0.9rem;">Período: <strong
+                            id="reposicao-periodo">-</strong></p>
+                    <p style="margin:0.25rem 0 0 0;color:var(--gray);font-size:0.85rem;">
+                        Total de vendas no mês: <strong id="reposicao-total-vendas">0</strong>
+                    </p>
+                </div>
+
+                <div id="reposicao-vazio" style="display:none;text-align:center;padding:2rem;color:var(--gray);">
+                    <p style="font-size:3rem;margin-bottom:0.5rem;">📭</p>
+                    <p>Nenhuma venda registrada neste mês.</p>
+                    <p style="font-size:0.9rem;">Realize vendas para gerar a lista de reposição.</p>
+                </div>
+
+                <table class="table-reposicao" style="width:100%;border-collapse:collapse;">
+                    <thead>
+                        <tr style="background:var(--spark-green);color:white;">
+                            <th style="padding:12px;text-align:left;border-radius:0.5rem 0 0 0;">Produto</th>
+                            <th style="padding:12px;text-align:center;width:120px;border-radius:0 0.5rem 0 0;">Qtd.
+                                Vendida</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reposicao-tbody">
+                        <!-- Preenchido via JS -->
+                    </tbody>
+                </table>
+
+                <div
+                    style="margin-top:1.5rem;padding:1rem;background:#fef3c7;border-radius:0.5rem;border-left:4px solid var(--spark-gold);">
+                    <p style="margin:0;font-size:0.9rem;color:var(--dark);">
+                        <strong>💡 Dica:</strong> Esta lista mostra exatamente o que saiu em vendas durante o mês.
+                        Use como guia para suas compras de reposição em Manaus.
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="relatorios.fecharModal()">Fechar</button>
+                <button class="btn btn-primary" onclick="relatorios.imprimirLista()">🖨️ Imprimir Lista</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Dados do Cliente para Caderneta -->
+    <div class="modal" id="modal-caderneta-cliente">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📒 Venda na Caderneta</h3>
+                <button class="btn-close" onclick="vendas.fecharModalCaderneta()">×</button>
+            </div>
+            <form id="form-caderneta-cliente" onsubmit="vendas.salvarVendaCaderneta(event)">
+                <div class="modal-body">
+                    <!-- Abas de seleção -->
+                    <div class="caderneta-tabs" style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+                        <button type="button" id="tab-existente" class="btn btn-secondary active" onclick="vendas.modoCaderneta('existente')" style="flex:1;">
+                            👤 Cliente Existente
+                        </button>
+                        <button type="button" id="tab-novo" class="btn btn-secondary" onclick="vendas.modoCaderneta('novo')" style="flex:1;">
+                            ➕ Novo Cliente
+                        </button>
+                    </div>
+
+                    <!-- Seleção de cliente existente -->
+                    <div id="modo-existente" class="form-group">
+                        <label for="caderneta-cliente-select">Selecionar Cliente *</label>
+                        <select id="caderneta-cliente-select" class="form-control" style="width:100%;padding:0.75rem;">
+                            <option value="">-- Selecione um cliente --</option>
+                        </select>
+                        <small style="color:#64748b;display:block;margin-top:0.25rem;">
+                            Total devido será somado ao saldo existente
+                        </small>
+                    </div>
+
+                    <!-- Cadastro de novo cliente (inicialmente oculto) -->
+                    <div id="modo-novo" class="form-group" style="display:none;">
+                        <div class="form-group">
+                            <label for="caderneta-nome">Nome Completo *</label>
+                            <input type="text" id="caderneta-nome" class="form-control" 
+                                placeholder="Digite o nome completo">
+                        </div>
+                        <div class="form-group">
+                            <label for="caderneta-contato">WhatsApp / Contato</label>
+                            <input type="tel" id="caderneta-contato" class="form-control"
+                                placeholder="(92) 99999-9999">
+                        </div>
+                    </div>
+
+                    <!-- Campo hidden para saber qual modo está ativo -->
+                    <input type="hidden" id="caderneta-modo" value="existente">
+
+                    <div class="form-group" style="margin-top:1rem;">
+                        <label>Resumo da Venda</label>
+                        <div id="caderneta-resumo" class="caderneta-resumo" style="background:#f8fafc;padding:1rem;border-radius:0.5rem;font-size:0.9rem;">
+                            <!-- Preenchido via JS -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="vendas.fecharModalCaderneta()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">💾 Salvar na Caderneta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
