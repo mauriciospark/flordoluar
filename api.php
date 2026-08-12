@@ -1,16 +1,4 @@
 <?php
-/*
-  ============================================================================
-  PROPRIETÁRIO: Mauricio Spark
-  MARCA:        SparkMauricio
-  PROJETO:      Flor do Luar
-  VERSÃO:       v1.0.0
-  LINHAGEM:     SPARK
-  ============================================================================
-  Documento de Planejamento de Escopo
-  COPYRIGHT: © 2026 / Mauricio Spark. Todos os direitos reservados.
-  ============================================================================
-*/
 /**
  * FLOR DO LUAR - API de Sincronização Scanner Remoto
  * Sistema de pareamento estilo Kahoot para scanner de código de barras
