@@ -1,0 +1,423 @@
+{
+  "_metadata": {
+    "sistema": "Flor do Luar",
+    "versao": "1.0.0",
+    "ultima_atualizacao": "2026-04-23T19:30:00.000Z",
+    "privacidade": "LOCAL-FIRST - Dados nunca saem deste dispositivo",
+    "aviso": "MANTENHA ESTE ARQUIVO APENAS NO HARDWARE LOCAL. NÃO COMPARTILHE EM REDES OU NUVENS."
+  },
+  "configuracoes": {
+    "nome_loja": "Flor do Luar - Mercearia e Logística",
+    "margem_lucro_padrao": 30,
+    "valor_frete_padrao": 0,
+    "nivel_critico_estoque": 5,
+    "moeda": "BRL",
+    "localizacao": "Comunidade Rio Negro - AM"
+  },
+  "estoque": [
+    {
+      "id": 101,
+      "nome": "Arroz 1kg",
+      "categoria": "rancho",
+      "custo_manaus": 5.00,
+      "frete": 1.50,
+      "custo_chegada": 6.50,
+      "preco_venda": 8.45,
+      "quantidade": 50,
+      "unidade": "un",
+      "data_cadastro": "2026-04-20T10:00:00.000Z"
+    },
+    {
+      "id": 102,
+      "nome": "Feijão 1kg",
+      "categoria": "rancho",
+      "custo_manaus": 6.50,
+      "frete": 1.80,
+      "custo_chegada": 8.30,
+      "preco_venda": 10.79,
+      "quantidade": 35,
+      "unidade": "un",
+      "data_cadastro": "2026-04-20T10:05:00.000Z"
+    },
+    {
+      "id": 103,
+      "nome": "Açúcar 1kg",
+      "categoria": "rancho",
+      "custo_manaus": 4.20,
+      "frete": 1.20,
+      "custo_chegada": 5.40,
+      "preco_venda": 7.02,
+      "quantidade": 42,
+      "unidade": "un",
+      "data_cadastro": "2026-04-20T10:10:00.000Z"
+    },
+    {
+      "id": 104,
+      "nome": "Café 500g",
+      "categoria": "rancho",
+      "custo_manaus": 8.00,
+      "frete": 2.00,
+      "custo_chegada": 10.00,
+      "preco_venda": 13.00,
+      "quantidade": 28,
+      "unidade": "un",
+      "data_cadastro": "2026-04-20T10:15:00.000Z"
+    },
+    {
+      "id": 105,
+      "nome": "Óleo de Soja 900ml",
+      "categoria": "rancho",
+      "custo_manaus": 6.00,
+      "frete": 1.50,
+      "custo_chegada": 7.50,
+      "preco_venda": 9.75,
+      "quantidade": 3,
+      "unidade": "un",
+      "data_cadastro": "2026-04-20T10:20:00.000Z"
+    },
+    {
+      "id": 201,
+      "nome": "Rede de Pesca 10m",
+      "categoria": "ferramentas",
+      "custo_manaus": 45.00,
+      "frete": 8.00,
+      "custo_chegada": 53.00,
+      "preco_venda": 68.90,
+      "quantidade": 8,
+      "unidade": "un",
+      "data_cadastro": "2026-04-21T09:00:00.000Z"
+    },
+    {
+      "id": 202,
+      "nome": "Anzol Caixa c/50",
+      "categoria": "ferramentas",
+      "custo_manaus": 15.00,
+      "frete": 3.00,
+      "custo_chegada": 18.00,
+      "preco_venda": 23.40,
+      "quantidade": 12,
+      "unidade": "cx",
+      "data_cadastro": "2026-04-21T09:05:00.000Z"
+    },
+    {
+      "id": 203,
+      "nome": "Linha de Nylon 100m",
+      "categoria": "ferramentas",
+      "custo_manaus": 8.50,
+      "frete": 1.50,
+      "custo_chegada": 10.00,
+      "preco_venda": 13.00,
+      "quantidade": 20,
+      "unidade": "un",
+      "data_cadastro": "2026-04-21T09:10:00.000Z"
+    },
+    {
+      "id": 204,
+      "nome": "Vara de Pesca 2,40m",
+      "categoria": "ferramentas",
+      "custo_manaus": 35.00,
+      "frete": 7.00,
+      "custo_chegada": 42.00,
+      "preco_venda": 54.60,
+      "quantidade": 6,
+      "unidade": "un",
+      "data_cadastro": "2026-04-21T09:15:00.000Z"
+    },
+    {
+      "id": 205,
+      "nome": "Isca Artificial Kit c/5",
+      "categoria": "ferramentas",
+      "custo_manaus": 25.00,
+      "frete": 4.00,
+      "custo_chegada": 29.00,
+      "preco_venda": 37.70,
+      "quantidade": 4,
+      "unidade": "kit",
+      "data_cadastro": "2026-04-21T09:20:00.000Z"
+    },
+    {
+      "id": 301,
+      "nome": "Refrigerante 2L",
+      "categoria": "bebidas",
+      "custo_manaus": 6.00,
+      "frete": 12.00,
+      "custo_chegada": 18.00,
+      "preco_venda": 10.00,
+      "quantidade": 48,
+      "unidade": "fardo",
+      "nivel_venda": "fardo",
+      "tipo_bebida": "pet_2l",
+      "frete_proporcional": 12.00,
+      "unidades_por_fardo": 12,
+      "unidades_por_embalagem": 12,
+      "data_cadastro": "2026-04-22T08:00:00.000Z"
+    },
+    {
+      "id": 302,
+      "nome": "Refrigerante 2L - Unidade",
+      "categoria": "bebidas",
+      "custo_manaus": 6.00,
+      "frete": 12.00,
+      "custo_chegada": 7.00,
+      "preco_venda": 9.10,
+      "quantidade": 24,
+      "unidade": "medio",
+      "nivel_venda": "medio",
+      "tipo_bebida": "pet_2l",
+      "frete_proporcional": 1.80,
+      "unidades_por_fardo": 1,
+      "unidades_por_embalagem": 1,
+      "data_cadastro": "2026-04-22T08:05:00.000Z"
+    },
+    {
+      "id": 303,
+      "nome": "Cerveja Lata 350ml",
+      "categoria": "bebidas",
+      "custo_manaus": 3.50,
+      "frete": 8.00,
+      "custo_chegada": 11.50,
+      "preco_venda": 15.00,
+      "quantidade": 36,
+      "unidade": "fardo",
+      "nivel_venda": "fardo",
+      "tipo_bebida": "lata",
+      "frete_proporcional": 8.00,
+      "unidades_por_fardo": 12,
+      "unidades_por_embalagem": 12,
+      "data_cadastro": "2026-04-22T08:10:00.000Z"
+    },
+    {
+      "id": 304,
+      "nome": "Cerveja Lata 350ml - Unidade",
+      "categoria": "bebidas",
+      "custo_manaus": 3.50,
+      "frete": 8.00,
+      "custo_chegada": 3.90,
+      "preco_venda": 5.50,
+      "quantidade": 15,
+      "unidade": "tamanho",
+      "nivel_venda": "tamanho",
+      "tipo_bebida": "lata",
+      "frete_proporcional": 0.40,
+      "unidades_por_fardo": 1,
+      "unidades_por_embalagem": 1,
+      "data_cadastro": "2026-04-22T08:15:00.000Z"
+    },
+    {
+      "id": 305,
+      "nome": "Água Mineral 500ml",
+      "categoria": "bebidas",
+      "custo_manaus": 1.20,
+      "frete": 5.00,
+      "custo_chegada": 6.20,
+      "preco_venda": 8.00,
+      "quantidade": 60,
+      "unidade": "fardo",
+      "nivel_venda": "fardo",
+      "tipo_bebida": "pet_500ml",
+      "frete_proporcional": 5.00,
+      "unidades_por_fardo": 20,
+      "unidades_por_embalagem": 20,
+      "data_cadastro": "2026-04-22T08:20:00.000Z"
+    },
+    {
+      "id": 306,
+      "nome": "Água Mineral 500ml - Unidade",
+      "categoria": "bebidas",
+      "custo_manaus": 1.20,
+      "frete": 5.00,
+      "custo_chegada": 1.45,
+      "preco_venda": 1.90,
+      "quantidade": 45,
+      "unidade": "tamanho",
+      "nivel_venda": "tamanho",
+      "tipo_bebida": "pet_500ml",
+      "frete_proporcional": 0.25,
+      "unidades_por_fardo": 1,
+      "unidades_por_embalagem": 1,
+      "data_cadastro": "2026-04-22T08:25:00.000Z"
+    }
+  ],
+  "caderneta": {
+    "clientes": [
+      {
+        "id": 1,
+        "nome": "João Silva",
+        "apelido": "João do Barco",
+        "contato": "(92) 98765-4321",
+        "localidade": "Comunidade São José",
+        "data_cadastro": "2026-04-15T08:00:00.000Z",
+        "saldo_devedor": 145.80,
+        "limite_credito": 500.00,
+        "ativo": true,
+        "historico": [
+          {
+            "id": "txn_001",
+            "data": "2026-04-18T14:30:00.000Z",
+            "tipo": "venda",
+            "valor": 89.90,
+            "descricao": "Rede de Pesca 10m + Anzol",
+            "saldo_apos": 89.90
+          },
+          {
+            "id": "txn_002",
+            "data": "2026-04-20T10:15:00.000Z",
+            "tipo": "venda",
+            "valor": 55.90,
+            "descricao": "Arroz 5kg + Feijão 2kg",
+            "saldo_apos": 145.80
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "nome": "Maria Santos",
+        "apelido": "Dona Maria",
+        "contato": "(92) 97654-3210",
+        "localidade": "Comunidade Nossa Senhora",
+        "data_cadastro": "2026-04-16T09:30:00.000Z",
+        "saldo_devedor": 0.00,
+        "limite_credito": 300.00,
+        "ativo": true,
+        "historico": [
+          {
+            "id": "txn_003",
+            "data": "2026-04-17T16:00:00.000Z",
+            "tipo": "venda",
+            "valor": 45.00,
+            "descricao": "Material de pesca diversos",
+            "saldo_apos": 45.00
+          },
+          {
+            "id": "txn_004",
+            "data": "2026-04-19T11:00:00.000Z",
+            "tipo": "pagamento",
+            "valor": 45.00,
+            "descricao": "Pagamento em dinheiro",
+            "saldo_apos": 0.00
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "nome": "Pedro Oliveira",
+        "apelido": "Pedro Pescador",
+        "contato": "(92) 96543-2109",
+        "localidade": "Comunidade Boa Vista",
+        "data_cadastro": "2026-04-18T14:00:00.000Z",
+        "saldo_devedor": 67.50,
+        "limite_credito": 400.00,
+        "ativo": true,
+        "historico": [
+          {
+            "id": "txn_005",
+            "data": "2026-04-19T08:30:00.000Z",
+            "tipo": "venda",
+            "valor": 120.00,
+            "descricao": "Vara de pesca + Linha + Iscas",
+            "saldo_apos": 120.00
+          },
+          {
+            "id": "txn_006",
+            "data": "2026-04-20T15:00:00.000Z",
+            "tipo": "pagamento",
+            "valor": 50.00,
+            "descricao": "Pagamento parcial - pesca do dia",
+            "saldo_apos": 70.00
+          },
+          {
+            "id": "txn_007",
+            "data": "2026-04-21T09:00:00.000Z",
+            "tipo": "troca",
+            "valor": 2.50,
+            "descricao": "Desconto - troca por peixe (2kg Tambaqui)",
+            "saldo_apos": 67.50
+          }
+        ]
+      }
+    ]
+  },
+  "alertas": [
+    {
+      "id": "alt_001",
+      "item_id": 105,
+      "nome_item": "Óleo de Soja 900ml",
+      "categoria": "rancho",
+      "quantidade_atual": 3,
+      "nivel_critico": 5,
+      "status": "PENDENTE",
+      "data_criacao": "2026-04-23T10:00:00.000Z",
+      "data_atualizacao": "2026-04-23T10:00:00.000Z",
+      "observacao": "Repriorizar compra em Manaus"
+    },
+    {
+      "id": "alt_002",
+      "item_id": 204,
+      "nome_item": "Vara de Pesca 2,40m",
+      "categoria": "ferramentas",
+      "quantidade_atual": 6,
+      "nivel_critico": 5,
+      "status": "VISTO",
+      "data_criacao": "2026-04-22T16:00:00.000Z",
+      "data_atualizacao": "2026-04-23T08:30:00.000Z",
+      "observacao": "Compra programada para próxima viagem"
+    },
+    {
+      "id": "alt_003",
+      "item_id": 205,
+      "nome_item": "Isca Artificial Kit c/5",
+      "categoria": "ferramentas",
+      "quantidade_atual": 4,
+      "nivel_critico": 5,
+      "status": "PENDENTE",
+      "data_criacao": "2026-04-23T14:00:00.000Z",
+      "data_atualizacao": "2026-04-23T14:00:00.000Z",
+      "observacao": "Produto em alta demanda"
+    }
+  ],
+  "historico_vendas": [
+    {
+      "id": "venda_001",
+      "data": "2026-04-23T09:30:00.000Z",
+      "cliente_id": 1,
+      "cliente_nome": "João Silva",
+      "tipo_pagamento": "caderneta",
+      "itens": [
+        {
+          "item_id": 101,
+          "nome": "Arroz 1kg",
+          "quantidade": 2,
+          "preco_unit": 8.45,
+          "subtotal": 16.90
+        },
+        {
+          "item_id": 201,
+          "nome": "Rede de Pesca 10m",
+          "quantidade": 1,
+          "preco_unit": 68.90,
+          "subtotal": 68.90
+        }
+      ],
+      "total": 85.80,
+      "observacao": "Venda na caderneta - cliente frequente"
+    },
+    {
+      "id": "venda_002",
+      "data": "2026-04-23T11:15:00.000Z",
+      "cliente_id": null,
+      "cliente_nome": "Cliente Avulso",
+      "tipo_pagamento": "avista",
+      "itens": [
+        {
+          "item_id": 102,
+          "nome": "Feijão 1kg",
+          "quantidade": 3,
+          "preco_unit": 10.79,
+          "subtotal": 32.37
+        }
+      ],
+      "total": 32.37,
+      "observacao": "Pagamento em dinheiro"
+    }
+  ]
+}
