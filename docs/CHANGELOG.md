@@ -3,7 +3,7 @@
   PROPRIETÁRIO: Mauricio Spark
   MARCA:        SparkMauricio
   PROJETO:      Flor Do Luar
-  VERSÃO:       v1.0.0
+  VERSÃO:       v2.0.0
   LINHAGEM:     SPARK
   ============================================================================
   Documento de Planejamento de Escopo
@@ -18,9 +18,12 @@ Todas as alterações notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere a [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
-## [1.0.0] - 2026-08-12
+## [2.0.0] - 2026-08-12
 
 ### Added
+- **Interface Otimizada v2.0**: Header unificado em linha única com sticky positioning
+- **Carrinho Inteligente**: Position sticky com scroll interno e botões fixos
+- **Design Compacto**: Otimizado para telas de notebook (~50px header)
 - **Sistema de Gestão Completo**: Implementação inicial do sistema de gestão para mercearias
 - **Gestão de Estoque**: 
   - Cadastro de itens com categorização (Rancho, Bebidas, Linha Mata, Manutenção, Ferragens/Pesca, EDS)
@@ -82,9 +85,10 @@ e este projeto adere a [Versionamento Semântico](https://semver.org/lang/pt-BR/
   - CHANGELOG.md com histórico de versões
 
 ### Changed
-- **Interface**: Design otimizado para eficiência e usabilidade
+- **Interface**: Redesign completo com sticky elements e layout compacto
 - **Performance**: Código otimizado para hardware modesto
 - **Acessibilidade**: Melhorias em atributos ARIA e navegação por teclado
+- **Carrinho**: Implementação de flexbox com scroll interno independente
 
 ### Fixed
 - **Compatibilidade**: Sistema testado em navegadores modernos (Chrome, Firefox, Edge, Safari)
@@ -95,19 +99,19 @@ e este projeto adere a [Versionamento Semântico](https://semver.org/lang/pt-BR/
 
 ## Próximas Versões Planejadas
 
-### [1.1.0] - Planejado
+### [2.1.0] - Planejado
 - [ ] Relatórios avançados com gráficos de tendências
 - [ ] Integração fiscal básica
 - [ ] Melhorias na interface baseadas em feedback
 - [ ] Sistema de busca avançado no estoque
 
-### [1.2.0] - Planejado
+### [2.2.0] - Planejado
 - [ ] App mobile para Android/iOS
 - [ ] Suporte multi-usuário com permissões
 - [ ] Integração com hardware (impressoras, leitores)
 - [ ] Gestão de fornecedores
 
-### [2.0.0] - Planejado
+### [3.0.0] - Planejado
 - [ ] Previsão de demanda com IA
 - [ ] Sincronização peer-to-peer criptografada
 - [ ] Marketplace de extensões

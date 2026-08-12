@@ -554,7 +554,7 @@ location.reload();
 
 ## 📋 Changelog
 
-### v2.0 - Abril 2025 (Release Atual)
+### v2.0 - Agosto 2026 (Release Atual)
 
 **UI/UX - Interface Otimizada:**
 - Header unificado em linha única (logo à esquerda, navegação à direita)

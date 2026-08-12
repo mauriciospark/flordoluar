@@ -477,8 +477,11 @@
                 </div>
             </div>
             <div class="card-actions">
-                <button class="btn btn-sm btn-secondary" data-action="edit">✏️</button>
-                <button class="btn btn-sm btn-danger" data-action="delete">🗑️</button>
+                <button class="btn btn-sm btn-primary" data-action="menu" title="Opções">⚙️</button>
+                <div class="card-menu" data-menu style="display:none;">
+                    <button class="menu-item" data-action="edit" title="Editar Completo">✏️ Editar Completo</button>
+                    <button class="menu-item menu-item-danger" data-action="delete" title="Excluir">🗑️ Excluir</button>
+                </div>
             </div>
         </div>
     </template>
@@ -591,7 +594,7 @@
             <div class="nota-totais">
                 <div class="nota-total-row">
                     <span>TOTAL:</span>
-                    <strong data-total></strong>
+                    <strong data-total-geral></strong>
                 </div>
             </div>
             <div class="nota-footer">
@@ -607,7 +610,7 @@
             <td data-nome></td>
             <td data-qtd></td>
             <td data-unit></td>
-            <td data-total></td>
+            <td data-total-item></td>
         </tr>
     </template>
 

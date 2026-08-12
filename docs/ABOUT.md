@@ -3,7 +3,7 @@
   PROPRIETÁRIO: Mauricio Spark
   MARCA:        SparkMauricio
   PROJETO:      Flor Do Luar
-  VERSÃO:       v1.0.0
+  VERSÃO:       v2.0.0
   LINHAGEM:     SPARK
   ============================================================================
   Documento de Planejamento de Escopo
@@ -121,6 +121,7 @@ O Flor Do Luar está em constante evolução, com planos ambiciosos para expandi
 - **Relatórios Avançados**: Gráficos e análises de tendências de vendas
 - **Integração Fiscal**: Suporte básico para emissão de documentos fiscais
 - **App Mobile**: Versão nativa para Android/iOS com sincronização local
+- **API PHP Otimizada**: Melhorias no sistema de pareamento e long-polling
 
 ### Médio Prazo (6-12 meses)
 - **Multi-usuário**: Suporte para múltiplos operadores com permissões diferenciadas

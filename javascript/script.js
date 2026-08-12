@@ -1,7 +1,7 @@
 // FLOR DO LUAR - Sistema de Gestão
 // Sistema Local-First / Privacy-First
 
-console.log('[FLOR DO LUAR] Script.js carregado - v' + new Date().toISOString().slice(0,10));
+console.log('[FLOR DO LUAR] Script.js carregado - v' + new Date().toISOString().slice(0, 10));
 
 // Constantes de configuração de estoque
 const CONFIG_ESTOQUE = {
@@ -60,17 +60,17 @@ const FATORES_FRETE_BEBIDAS = {
 const DataManager = {
     // Caminho do arquivo de dados (relativo)
     DATA_PATH: './data.json',
-    
+
     // Cache em memória dos dados carregados
     cache: null,
-    
+
     /**
      * CARREGAR (READ) - Carrega dados do arquivo JSON
      * @returns {Promise<Object>} - Objeto com todos os dados
      */
     async carregar() {
         if (this.cache) return this.cache;
-        
+
         try {
             const response = await fetch(this.DATA_PATH);
             if (!response.ok) throw new Error('Erro ao carregar data.json');
@@ -81,7 +81,7 @@ const DataManager = {
             return null;
         }
     },
-    
+
     /**
      * SALVAR (UPDATE) - Salva dados no arquivo (simulação para ambiente browser)
      * NOTA: Em produção real, usar API de arquivo ou download
@@ -91,12 +91,12 @@ const DataManager = {
     async salvar(dados) {
         try {
             this.cache = dados;
-            
+
             // Em ambiente real com servidor local, faria POST para salvar
             // Por ora, exporta para download manual (privacidade garantida)
             const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
-            
+
             // Cria link de download automático
             const link = document.createElement('a');
             link.href = url;
@@ -105,16 +105,16 @@ const DataManager = {
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
-            
+
             return true;
         } catch (error) {
             console.error('DataManager.salvar():', error);
             return false;
         }
     },
-    
+
     // ===== OPERAÇÕES DE ESTOQUE =====
-    
+
     /**
      * CRIAR - Adiciona novo item ao estoque
      * @param {Object} item - Item a ser adicionado
@@ -123,7 +123,7 @@ const DataManager = {
     async criarItem(item) {
         const dados = await this.carregar();
         if (!dados) return null;
-        
+
         // Gera ID único
         const novoId = Math.max(...dados.estoque.map(i => i.id), 100) + 1;
         const novoItem = {
@@ -131,12 +131,12 @@ const DataManager = {
             id: novoId,
             data_cadastro: new Date().toISOString()
         };
-        
+
         dados.estoque.push(novoItem);
         await this.salvar(dados);
         return novoItem;
     },
-    
+
     /**
      * LER - Busca item do estoque por ID
      * @param {number} id - ID do item
@@ -147,7 +147,7 @@ const DataManager = {
         if (!dados) return null;
         return dados.estoque.find(item => item.id === id) || null;
     },
-    
+
     /**
      * ATUALIZAR - Atualiza item do estoque
      * @param {number} id - ID do item
@@ -157,15 +157,15 @@ const DataManager = {
     async atualizarItem(id, alteracoes) {
         const dados = await this.carregar();
         if (!dados) return false;
-        
+
         const index = dados.estoque.findIndex(item => item.id === id);
         if (index === -1) return false;
-        
+
         dados.estoque[index] = { ...dados.estoque[index], ...alteracoes };
         await this.salvar(dados);
         return true;
     },
-    
+
     /**
      * DELETAR - Remove item do estoque
      * @param {number} id - ID do item
@@ -174,17 +174,17 @@ const DataManager = {
     async deletarItem(id) {
         const dados = await this.carregar();
         if (!dados) return false;
-        
+
         const index = dados.estoque.findIndex(item => item.id === id);
         if (index === -1) return false;
-        
+
         dados.estoque.splice(index, 1);
         await this.salvar(dados);
         return true;
     },
-    
+
     // ===== OPERAÇÕES DE CADERNETA =====
-    
+
     /**
      * CRIAR CLIENTE - Adiciona novo cliente
      * @param {Object} cliente - Dados do cliente
@@ -193,7 +193,7 @@ const DataManager = {
     async criarCliente(cliente) {
         const dados = await this.carregar();
         if (!dados) return null;
-        
+
         const novoId = Math.max(...dados.caderneta.clientes.map(c => c.id), 0) + 1;
         const novoCliente = {
             ...cliente,
@@ -203,12 +203,12 @@ const DataManager = {
             ativo: true,
             historico: []
         };
-        
+
         dados.caderneta.clientes.push(novoCliente);
         await this.salvar(dados);
         return novoCliente;
     },
-    
+
     /**
      * LER CLIENTE - Busca cliente por ID
      * @param {number} id - ID do cliente
@@ -219,7 +219,7 @@ const DataManager = {
         if (!dados) return null;
         return dados.caderneta.clientes.find(c => c.id === id) || null;
     },
-    
+
     /**
      * ATUALIZAR CLIENTE - Atualiza dados do cliente
      * @param {number} id - ID do cliente
@@ -229,18 +229,18 @@ const DataManager = {
     async atualizarCliente(id, alteracoes) {
         const dados = await this.carregar();
         if (!dados) return false;
-        
+
         const index = dados.caderneta.clientes.findIndex(c => c.id === id);
         if (index === -1) return false;
-        
-        dados.caderneta.clientes[index] = { 
-            ...dados.caderneta.clientes[index], 
-            ...alteracoes 
+
+        dados.caderneta.clientes[index] = {
+            ...dados.caderneta.clientes[index],
+            ...alteracoes
         };
         await this.salvar(dados);
         return true;
     },
-    
+
     /**
      * DELETAR CLIENTE - Remove cliente (soft delete)
      * @param {number} id - ID do cliente
@@ -249,16 +249,16 @@ const DataManager = {
     async deletarCliente(id) {
         const dados = await this.carregar();
         if (!dados) return false;
-        
+
         const index = dados.caderneta.clientes.findIndex(c => c.id === id);
         if (index === -1) return false;
-        
+
         // Soft delete - mantém histórico mas desativa
         dados.caderneta.clientes[index].ativo = false;
         await this.salvar(dados);
         return true;
     },
-    
+
     /**
      * ADICIONAR LANÇAMENTO - Registra transação na caderneta
      * @param {number} clienteId - ID do cliente
@@ -268,33 +268,33 @@ const DataManager = {
     async adicionarLancamento(clienteId, lancamento) {
         const dados = await this.carregar();
         if (!dados) return false;
-        
+
         const cliente = dados.caderneta.clientes.find(c => c.id === clienteId);
         if (!cliente) return false;
-        
+
         // Calcula novo saldo
         let novoSaldo = cliente.saldo_devedor;
         if (lancamento.tipo === 'venda') novoSaldo += lancamento.valor;
         else if (lancamento.tipo === 'pagamento' || lancamento.tipo === 'troca') {
             novoSaldo = Math.max(0, novoSaldo - lancamento.valor);
         }
-        
+
         const novoLancamento = {
             id: `txn_${Date.now()}`,
             data: new Date().toISOString(),
             ...lancamento,
             saldo_apos: novoSaldo
         };
-        
+
         cliente.historico.push(novoLancamento);
         cliente.saldo_devedor = novoSaldo;
-        
+
         await this.salvar(dados);
         return true;
     },
-    
+
     // ===== CONFIGURAÇÕES =====
-    
+
     /**
      * LER CONFIGURAÇÕES - Retorna configurações do sistema
      * @returns {Promise<Object|null>} - Configurações
@@ -303,7 +303,7 @@ const DataManager = {
         const dados = await this.carregar();
         return dados ? dados.configuracoes : null;
     },
-    
+
     /**
      * ATUALIZAR CONFIGURAÇÕES - Atualiza configurações
      * @param {Object} alteracoes - Novas configurações
@@ -312,14 +312,14 @@ const DataManager = {
     async atualizarConfiguracoes(alteracoes) {
         const dados = await this.carregar();
         if (!dados) return false;
-        
+
         dados.configuracoes = { ...dados.configuracoes, ...alteracoes };
         await this.salvar(dados);
         return true;
     },
-    
+
     // ===== UTILITÁRIOS =====
-    
+
     /**
      * LISTAR TUDO - Retorna todos os dados (para debug/backup)
      * @returns {Promise<Object|null>} - Objeto completo
@@ -327,7 +327,7 @@ const DataManager = {
     async listarTudo() {
         return await this.carregar();
     },
-    
+
     /**
      * EXPORTAR BACKUP - Gera arquivo de backup para download
      * PRIVACIDADE: Arquivo nunca sai do dispositivo do usuário
@@ -335,12 +335,12 @@ const DataManager = {
     async exportarBackup() {
         const dados = await this.carregar();
         if (!dados) return;
-        
-        const blob = new Blob([JSON.stringify(dados, null, 2)], { 
-            type: 'application/json' 
+
+        const blob = new Blob([JSON.stringify(dados, null, 2)], {
+            type: 'application/json'
         });
         const url = URL.createObjectURL(blob);
-        
+
         const link = document.createElement('a');
         link.href = url;
         link.download = `flordoluar_backup_${new Date().toISOString().split('T')[0]}.json`;
@@ -376,11 +376,7 @@ function fillDataAttributes(element, data) {
     Object.entries(data).forEach(([key, value]) => {
         const target = element.querySelector(`[data-${key}]`);
         if (target) {
-            if (key === 'text' || key === 'html') {
-                target.textContent = value;
-            } else {
-                target.textContent = value;
-            }
+            target.textContent = value;
         }
     });
 }
@@ -435,6 +431,13 @@ const App = {
             }
         }, { passive: true });
 
+        // Configura fechamento de menus ao clicar fora
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.card-menu').forEach(menu => {
+                menu.style.display = 'none';
+            });
+        });
+
         console.log('[Sticky Header] Configurado');
     },
 
@@ -442,15 +445,15 @@ const App = {
     carregarDados() {
         // DEBUG: Log de início do carregamento
         console.log('[DEBUG] Iniciando carregarDados()...');
-        
+
         const saved = localStorage.getItem('flutogrande-data');
-        
+
         // DEBUG: Verifica se há dados salvos
         console.log('[DEBUG] Dados salvos no localStorage:', saved ? 'SIM' : 'NÃO');
-        
+
         if (saved) {
             const parsed = JSON.parse(saved);
-            
+
             // Garante estrutura correta
             this.data = {
                 itens: parsed.itens || [],
@@ -459,20 +462,20 @@ const App = {
                 historicoAlertas: parsed.historicoAlertas || [],
                 historicoVendas: parsed.historicoVendas || []
             };
-            
+
             // DEBUG: Log dos dados carregados
             console.log('[DEBUG] Dados carregados do localStorage:');
             console.log('- Itens:', this.data.itens.length);
             console.log('- Bebidas:', this.data.itens.filter(i => i.categoria === 'bebidas').length);
-            
+
             // Mescla novos itens dos dados iniciais que não existem nos dados salvos
             // E atualiza bebidas para garantir estrutura completa
             const dadosIniciais = this.getDadosIniciais();
             const itensSalvosIds = (this.data.itens || []).map(i => i.id);
-            
+
             let novosItensAdicionados = 0;
             let bebidasAtualizadas = 0;
-            
+
             dadosIniciais.forEach(itemInicial => {
                 if (!itensSalvosIds.includes(itemInicial.id)) {
                     this.data.itens.push(itemInicial);
@@ -492,27 +495,27 @@ const App = {
                     }
                 }
             });
-            
+
             // DEBUG: Log de mesclagem
             console.log('[DEBUG] Novos itens adicionados:', novosItensAdicionados);
             console.log('[DEBUG] Bebidas atualizadas:', bebidasAtualizadas);
-            
+
             this.salvarDados();
         } else {
             // Dados iniciais de exemplo
             console.log('[DEBUG] Nenhum dado salvo. Usando getDadosIniciais()...');
             this.data.itens = this.getDadosIniciais();
-            
+
             // DEBUG: Log dos dados iniciais
             console.log('[DEBUG] Dados iniciais carregados:');
             console.log('- Total de itens:', this.data.itens.length);
             console.log('- Bebidas:', this.data.itens.filter(i => i.categoria === 'bebidas').length);
-            console.log('- IDs das bebidas:', this.data.itens.filter(i => i.categoria === 'bebidas').map(i => ({id: i.id, nome: i.nome})));
-            
+            console.log('- IDs das bebidas:', this.data.itens.filter(i => i.categoria === 'bebidas').map(i => ({ id: i.id, nome: i.nome })));
+
             this.salvarDados();
         }
     },
-    
+
     // Função para resetar dados e recarregar (útil para debug)
     resetarDados() {
         console.log('[DEBUG] Resetando dados do localStorage...');
@@ -527,7 +530,7 @@ const App = {
     },
 
     // ===== MÓDULO: GERENCIAMENTO DE ESTOQUE =====
-    
+
     /**
      * Baixa automática do estoque após venda
      * @param {Array} itensVendidos - Array de {id, quantidade} vendidos
@@ -543,7 +546,7 @@ const App = {
 
         itensVendidos.forEach(itemVendido => {
             const itemEstoque = this.data.itens.find(i => i.id === itemVendido.id);
-            
+
             if (!itemEstoque) {
                 resultado.erros.push(`Item ID ${itemVendido.id} não encontrado no estoque`);
                 resultado.sucesso = false;
@@ -560,7 +563,7 @@ const App = {
             // Realiza a baixa
             const qtdAnterior = itemEstoque.quantidade;
             itemEstoque.quantidade -= itemVendido.quantidade;
-            
+
             resultado.itensBaixados.push({
                 id: itemEstoque.id,
                 nome: itemEstoque.nome,
@@ -612,7 +615,7 @@ const App = {
             };
 
             // Adiciona aos alertas ativos se ainda não existir
-            const existeAlerta = this.data.alertasEstoque.some(a => 
+            const existeAlerta = this.data.alertasEstoque.some(a =>
                 a.itemId === item.id && a.status === 'PENDENTE'
             );
 
@@ -633,7 +636,7 @@ const App = {
      */
     verificarTodoEstoque() {
         const alertas = [];
-        
+
         this.data.itens.forEach(item => {
             const alerta = this.verificarNivelCritico(item);
             if (alerta) {
@@ -653,7 +656,7 @@ const App = {
         if (alerta) {
             alerta.status = 'RESOLVIDO';
             alerta.dataResolucao = new Date().toISOString();
-            
+
             // Remove da lista de ativos
             this.data.alertasEstoque = this.data.alertasEstoque.filter(a => a.id !== alertaId);
             this.salvarDados();
@@ -689,7 +692,7 @@ const App = {
      * @returns {Array} - Alertas da categoria
      */
     getAlertasPorCategoria(categoria) {
-        return this.data.alertasEstoque.filter(a => 
+        return this.data.alertasEstoque.filter(a =>
             a.categoria === categoria && a.status === 'PENDENTE'
         );
     },
@@ -759,59 +762,52 @@ const App = {
         container.appendChild(panelFragment);
     },
 
-    renderAll() {
-        estoque.render();
-        vendas.render();
-        creditos.render();
-        this.renderizarPainelAlertas();
-    },
-
     getDadosIniciais() {
         return [
             // Bebidas - Alto Giro (com níveis de venda)
-            { 
-                id: 301, nome: 'Refrigerante 2L - Fardo', categoria: 'bebidas', quantidade: 48, 
-                custo: 6.00, frete: 12.00, preco: 10.00, minimo: 12, 
+            {
+                id: 301, nome: 'Refrigerante 2L - Fardo', categoria: 'bebidas', quantidade: 48,
+                custo: 6.00, frete: 12.00, preco: 10.00, minimo: 12,
                 unidade: 'fardo', nivel_venda: 'fardo', tipo_bebida: 'pet_2l',
-                frete_proporcional: 12.00, custo_chegada: 18.00, unidades_por_embalagem: 12 
+                frete_proporcional: 12.00, custo_chegada: 18.00, unidades_por_embalagem: 12
             },
-            { 
-                id: 302, nome: 'Refrigerante 2L - Unidade', categoria: 'bebidas', quantidade: 24, 
-                custo: 6.00, frete: 12.00, preco: 9.10, minimo: 5, 
+            {
+                id: 302, nome: 'Refrigerante 2L - Unidade', categoria: 'bebidas', quantidade: 24,
+                custo: 6.00, frete: 12.00, preco: 9.10, minimo: 5,
                 unidade: 'medio', nivel_venda: 'medio', tipo_bebida: 'pet_2l',
-                frete_proporcional: 1.80, custo_chegada: 7.80, unidades_por_embalagem: 1 
+                frete_proporcional: 1.80, custo_chegada: 7.80, unidades_por_embalagem: 1
             },
-            { 
-                id: 303, nome: 'Cerveja Lata 350ml - Fardo', categoria: 'bebidas', quantidade: 36, 
-                custo: 3.50, frete: 8.00, preco: 15.00, minimo: 12, 
+            {
+                id: 303, nome: 'Cerveja Lata 350ml - Fardo', categoria: 'bebidas', quantidade: 36,
+                custo: 3.50, frete: 8.00, preco: 15.00, minimo: 12,
                 unidade: 'fardo', nivel_venda: 'fardo', tipo_bebida: 'lata',
-                frete_proporcional: 8.00, custo_chegada: 11.50, unidades_por_embalagem: 12 
+                frete_proporcional: 8.00, custo_chegada: 11.50, unidades_por_embalagem: 12
             },
-            { 
-                id: 304, nome: 'Cerveja Lata 350ml - Unidade', categoria: 'bebidas', quantidade: 15, 
-                custo: 3.50, frete: 8.00, preco: 5.50, minimo: 5, 
+            {
+                id: 304, nome: 'Cerveja Lata 350ml - Unidade', categoria: 'bebidas', quantidade: 15,
+                custo: 3.50, frete: 8.00, preco: 5.50, minimo: 5,
                 unidade: 'tamanho', nivel_venda: 'tamanho', tipo_bebida: 'lata',
-                frete_proporcional: 0.40, custo_chegada: 3.90, unidades_por_embalagem: 1 
+                frete_proporcional: 0.40, custo_chegada: 3.90, unidades_por_embalagem: 1
             },
-            { 
-                id: 305, nome: 'Água Mineral 500ml - Fardo', categoria: 'bebidas', quantidade: 60, 
-                custo: 1.20, frete: 5.00, preco: 8.00, minimo: 20, 
+            {
+                id: 305, nome: 'Água Mineral 500ml - Fardo', categoria: 'bebidas', quantidade: 60,
+                custo: 1.20, frete: 5.00, preco: 8.00, minimo: 20,
                 unidade: 'fardo', nivel_venda: 'fardo', tipo_bebida: 'pet_500ml',
-                frete_proporcional: 5.00, custo_chegada: 6.20, unidades_por_embalagem: 20 
+                frete_proporcional: 5.00, custo_chegada: 6.20, unidades_por_embalagem: 20
             },
-            { 
-                id: 306, nome: 'Água Mineral 500ml - Unidade', categoria: 'bebidas', quantidade: 45, 
-                custo: 1.20, frete: 5.00, preco: 1.90, minimo: 10, 
+            {
+                id: 306, nome: 'Água Mineral 500ml - Unidade', categoria: 'bebidas', quantidade: 45,
+                custo: 1.20, frete: 5.00, preco: 1.90, minimo: 10,
                 unidade: 'tamanho', nivel_venda: 'tamanho', tipo_bebida: 'pet_500ml',
-                frete_proporcional: 0.25, custo_chegada: 1.45, unidades_por_embalagem: 1 
+                frete_proporcional: 0.25, custo_chegada: 1.45, unidades_por_embalagem: 1
             },
-            { 
-                id: 307, nome: 'Guaraná Caçulinha 200ml', categoria: 'bebidas', quantidade: 50, 
-                custo: 1.80, frete: 4.00, preco: 3.20, minimo: 15, 
+            {
+                id: 307, nome: 'Garrafa de Guaraná', categoria: 'bebidas', quantidade: 50,
+                custo: 1.80, frete: 4.00, preco: 3.20, minimo: 15,
                 unidade: 'caçulinha', nivel_venda: 'caçulinha', tipo_bebida: 'caculinha',
-                frete_proporcional: 0.12, custo_chegada: 1.92, unidades_por_embalagem: 1 
+                frete_proporcional: 0.12, custo_chegada: 1.92, unidades_por_embalagem: 1
             },
-            
+
             // Itens de Rancho
             { id: 7, nome: 'Arroz 5kg', categoria: 'rancho', quantidade: 15, custo: 18.00, frete: 3.00, preco: 28.00, minimo: 5 },
             { id: 70, nome: 'Arroz 1kg', categoria: 'rancho', quantidade: 25, custo: 4.50, frete: 0.80, preco: 8.00, minimo: 10 },
@@ -824,14 +820,14 @@ const App = {
             { id: 14, nome: 'Sardinha em lata', categoria: 'rancho', quantidade: 24, custo: 3.00, frete: 0.50, preco: 5.50, minimo: 6 },
             { id: 15, nome: 'Sabão em pó 1kg', categoria: 'rancho', quantidade: 10, custo: 8.00, frete: 1.50, preco: 14.00, minimo: 3 },
             { id: 16, nome: 'Papel higiênico 4 rolos', categoria: 'rancho', quantidade: 12, custo: 6.00, frete: 1.00, preco: 11.00, minimo: 4 },
-            
+
             // Vestuário de Trabalho (Linha Mata)
             { id: 17, nome: 'Camisa manga longa UV', categoria: 'vestuario', quantidade: 8, custo: 25.00, frete: 4.00, preco: 45.00, minimo: 3 },
             { id: 18, nome: 'Calça brim reforçada', categoria: 'vestuario', quantidade: 6, custo: 35.00, frete: 5.00, preco: 60.00, minimo: 2 },
             { id: 19, nome: 'Bota PVC cano longo', categoria: 'vestuario', quantidade: 4, custo: 45.00, frete: 6.00, preco: 75.00, minimo: 2 },
             { id: 20, nome: 'Chapéu de palha', categoria: 'vestuario', quantidade: 10, custo: 12.00, frete: 2.00, preco: 22.00, minimo: 3 },
             { id: 21, nome: 'Perneiras', categoria: 'vestuario', quantidade: 5, custo: 18.00, frete: 3.00, preco: 32.00, minimo: 2 },
-            
+
             // Manutenção e Consumíveis
             { id: 22, nome: 'Óleo 2 tempos 500ml', categoria: 'manutencao', quantidade: 8, custo: 12.00, frete: 2.00, preco: 22.00, minimo: 3 },
             { id: 23, nome: 'Óleo 4 tempos 1L', categoria: 'manutencao', quantidade: 6, custo: 15.00, frete: 2.50, preco: 28.00, minimo: 2 },
@@ -839,14 +835,14 @@ const App = {
             { id: 25, nome: 'Corrente de motosserra', categoria: 'manutencao', quantidade: 4, custo: 35.00, frete: 5.00, preco: 60.00, minimo: 2 },
             { id: 26, nome: 'Corda de nylon 100m', categoria: 'manutencao', quantidade: 6, custo: 18.00, frete: 3.00, preco: 32.00, minimo: 2 },
             { id: 27, nome: 'Graxa 500g', categoria: 'manutencao', quantidade: 5, custo: 10.00, frete: 1.80, preco: 18.00, minimo: 2 },
-            
+
             // Ferramentas e Pesca
             { id: 28, nome: 'Terçado', categoria: 'ferramentas', quantidade: 4, custo: 28.00, frete: 4.00, preco: 50.00, minimo: 2 },
             { id: 29, nome: 'Lima grossa', categoria: 'ferramentas', quantidade: 6, custo: 12.00, frete: 2.00, preco: 22.00, minimo: 2 },
             { id: 30, nome: 'Pedra de amolar', categoria: 'ferramentas', quantidade: 5, custo: 15.00, frete: 2.50, preco: 28.00, minimo: 2 },
             { id: 31, nome: 'Anzol pacote c/10', categoria: 'ferramentas', quantidade: 15, custo: 5.00, frete: 0.80, preco: 10.00, minimo: 5 },
             { id: 32, nome: 'Malhadeira 10m', categoria: 'ferramentas', quantidade: 4, custo: 35.00, frete: 5.00, preco: 60.00, minimo: 2 },
-            
+
             // EDS e Escola
             { id: 33, nome: 'Caderno 96 folhas', categoria: 'escola', quantidade: 20, custo: 4.50, frete: 0.80, preco: 9.00, minimo: 5 },
             { id: 34, nome: 'Lápis grafite', categoria: 'escola', quantidade: 30, custo: 0.80, frete: 0.15, preco: 2.00, minimo: 10 },
@@ -873,11 +869,11 @@ const App = {
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.page === page);
         });
-        
+
         document.querySelectorAll('.page').forEach(p => {
             p.classList.toggle('active', p.id === `page-${page}`);
         });
-        
+
         this.renderAll();
     },
 
@@ -891,15 +887,16 @@ const App = {
         });
     },
 
+    gerarId() {
+        return Date.now();
+    },
+
     renderAll() {
         estoque.render();
         vendas.render();
         creditos.render();
         relatorios.renderizarListaReposicaoPagina();
-    },
-
-    gerarId() {
-        return Date.now();
+        this.renderizarPainelAlertas();
     },
 
     formatarMoeda(valor) {
@@ -921,7 +918,7 @@ const estoque = {
     render(filtro = this.filtroAtual) {
         this.filtroAtual = filtro;
         const grid = document.getElementById('estoque-grid');
-        
+
         // DEBUG: Log de dados carregados
         console.log('[DEBUG] Total de itens em App.data.itens:', App.data.itens.length);
         console.log('[DEBUG] Itens por categoria:', {
@@ -932,17 +929,17 @@ const estoque = {
             ferramentas: App.data.itens.filter(i => i.categoria === 'ferramentas').length,
             escola: App.data.itens.filter(i => i.categoria === 'escola').length
         });
-        
+
         let itens = App.data.itens.filter(i => i.categoria !== 'producao');
         if (filtro !== 'todos') {
             itens = itens.filter(i => i.categoria === filtro);
         }
-        
+
         // DEBUG: Log de itens filtrados
         console.log('[DEBUG] Filtro atual:', filtro);
         console.log('[DEBUG] Itens a renderizar:', itens.length);
         console.log('[DEBUG] Primeiros 3 itens:', itens.slice(0, 3).map(i => ({ nome: i.nome, cat: i.categoria })));
-        
+
         itens.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 
         if (itens.length === 0) {
@@ -951,7 +948,7 @@ const estoque = {
         }
 
         grid.innerHTML = '';
-        
+
         // Atualiza contadores nos cards de categoria
         const contagem = {
             rancho: App.data.itens.filter(i => i.categoria === 'rancho').length,
@@ -961,12 +958,12 @@ const estoque = {
             ferramentas: App.data.itens.filter(i => i.categoria === 'ferramentas').length,
             escola: App.data.itens.filter(i => i.categoria === 'escola').length
         };
-        
+
         Object.keys(contagem).forEach(cat => {
             const el = document.querySelector(`[data-qtd-${cat}]`);
             if (el) el.textContent = `${contagem[cat]} itens`;
         });
-        
+
         const categorias = {
             rancho: '🍚 Rancho',
             bebidas: '🥤 Bebidas',
@@ -981,7 +978,7 @@ const estoque = {
             let estoqueClass = 'estoque-ok';
             let badgeClass = 'ok';
             let statusText = 'Estoque OK';
-            
+
             if (item.quantidade <= CONFIG_ESTOQUE.NIVEL_CRITICO) {
                 estoqueClass = 'estoque-critico';
                 badgeClass = 'critico';
@@ -1001,13 +998,13 @@ const estoque = {
 
             const card = cardFragment.querySelector('[data-card]');
             card.classList.add(estoqueClass);
-            
+
             // Adiciona data-attributes para bebidas
             if (item.categoria === 'bebidas') {
                 card.dataset.categoria = 'bebidas';
                 if (item.nivel_venda) card.dataset.nivel = item.nivel_venda;
             }
-            
+
             if (item.quantidade <= CONFIG_ESTOQUE.NIVEL_CRITICO) {
                 card.classList.add('has-critico-badge');
                 const badge = document.createElement('span');
@@ -1031,7 +1028,7 @@ const estoque = {
                 custo: App.formatarMoeda(custoChegada),
                 preco: App.formatarMoeda(item.preco)
             });
-            
+
             // Se for bebida, atualiza o nome com a tag HTML
             if (item.categoria === 'bebidas' && item.tipo_bebida) {
                 const nomeEl = card.querySelector('[data-nome]');
@@ -1044,11 +1041,33 @@ const estoque = {
                 badge.querySelector('[data-estoque-text]').textContent = statusText;
             }
 
-            const btnEdit = card.querySelector('[data-action="edit"]');
-            const btnDelete = card.querySelector('[data-action="delete"]');
-            
-            btnEdit.addEventListener('click', () => this.editar(item.id));
-            btnDelete.addEventListener('click', () => this.excluir(item.id));
+            const btnMenu = card.querySelector('[data-action="menu"]');
+            const cardMenu = card.querySelector('[data-menu]');
+
+            // Toggle menu ao clicar no botão de opções
+            btnMenu.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Fecha outros menus abertos
+                document.querySelectorAll('.card-menu').forEach(menu => {
+                    if (menu !== cardMenu) menu.style.display = 'none';
+                });
+                // Toggle menu atual
+                cardMenu.style.display = cardMenu.style.display === 'none' ? 'block' : 'none';
+            });
+
+            // Configura ações do menu
+            const btnEdit = cardMenu.querySelector('[data-action="edit"]');
+            const btnDelete = cardMenu.querySelector('[data-action="delete"]');
+
+            btnEdit.addEventListener('click', () => {
+                cardMenu.style.display = 'none';
+                this.editar(item.id);
+            });
+
+            btnDelete.addEventListener('click', () => {
+                cardMenu.style.display = 'none';
+                this.excluir(item.id);
+            });
 
             grid.appendChild(cardFragment);
         });
@@ -1058,10 +1077,10 @@ const estoque = {
         const modal = document.getElementById('modal-item');
         const form = document.getElementById('form-item');
         const title = document.getElementById('modal-item-title');
-        
+
         form.reset();
         document.getElementById('item-id').value = '';
-        
+
         if (id) {
             const item = App.data.itens.find(i => i.id === id);
             if (item) {
@@ -1074,7 +1093,7 @@ const estoque = {
                 document.getElementById('item-frete').value = item.frete;
                 document.getElementById('item-preco').value = item.preco;
                 document.getElementById('item-minimo').value = item.minimo;
-                
+
                 // Restaura campos específicos de bebidas
                 if (item.categoria === 'bebidas') {
                     this.onCategoriaChange('bebidas');
@@ -1088,7 +1107,7 @@ const estoque = {
             // Reseta campos de bebidas
             this.onCategoriaChange(document.getElementById('item-categoria').value);
         }
-        
+
         modal.classList.add('active');
     },
 
@@ -1101,7 +1120,7 @@ const estoque = {
     },
 
     // ===== FUNÇÕES PARA GERENCIAMENTO DE BEBIDAS =====
-    
+
     /**
      * Handler quando muda a categoria no formulário
      * Mostra campos de nível de venda apenas para bebidas
@@ -1111,7 +1130,7 @@ const estoque = {
         const grupoFreteProp = document.getElementById('grupo-frete-proporcional');
         const grupoTipoBebida = document.getElementById('grupo-tipo-bebida');
         const grupoMultiplicador = document.getElementById('grupo-multiplicador');
-        
+
         if (categoria === 'bebidas') {
             grupoUnidade.style.display = 'block';
             grupoTipoBebida.style.display = 'block';
@@ -1127,7 +1146,7 @@ const estoque = {
             document.getElementById('item-unidades-por-embalagem').value = '1';
         }
     },
-    
+
     /**
      * Handler quando muda o nível de venda (fardo/individual/tamanho)
      * Calcula frete proporcional automaticamente e ajusta multiplicador
@@ -1137,19 +1156,19 @@ const estoque = {
         const inputFreteProp = document.getElementById('item-frete-proporcional');
         const inputFreteBase = document.getElementById('item-frete');
         const inputMultiplicador = document.getElementById('item-unidades-por-embalagem');
-        
+
         if (!nivel) {
             grupoFreteProp.style.display = 'none';
             inputFreteProp.value = '';
             inputMultiplicador.value = '1';
             return;
         }
-        
+
         const freteBase = parseFloat(inputFreteBase.value) || 0;
         const config = CONFIG_ESTOQUE.BEBIDAS_NIVEIS[nivel];
         const fator = config?.proporcao_frete || 1.0;
         const multiplicador = config?.multiplicador || 1;
-        
+
         // Para fardo/galão, multiplica o frete; para outros, proporcional
         let freteCalculado;
         if (nivel === 'fardo' || nivel === 'grande') {
@@ -1157,12 +1176,12 @@ const estoque = {
         } else {
             freteCalculado = freteBase * fator; // Frete proporcional
         }
-        
+
         grupoFreteProp.style.display = 'block';
         inputFreteProp.value = freteCalculado.toFixed(2);
         inputMultiplicador.value = multiplicador;
     },
-    
+
     /**
      * Calcula frete proporcional para bebidas baseado no nível
      * Multiplica frete quando é fardo ou galão grande
@@ -1173,11 +1192,11 @@ const estoque = {
      */
     calcularFreteBebidas(freteBase, nivel, unidadesPorEmbalagem = 1) {
         if (!nivel) return freteBase;
-        
+
         const config = CONFIG_ESTOQUE.BEBIDAS_NIVEIS[nivel];
         const fator = config?.proporcao_frete || 1.0;
         const multiplicador = config?.multiplicador || 1;
-        
+
         // Para fardo: frete total dividido por unidades
         // Para galão grande: frete integral
         // Para outros: frete proporcional
@@ -1192,25 +1211,25 @@ const estoque = {
 
     salvar(e) {
         e.preventDefault();
-        
+
         const id = document.getElementById('item-id').value;
         const categoria = document.getElementById('item-categoria').value;
         const freteBase = parseFloat(document.getElementById('item-frete').value) || 0;
         const nivel = document.getElementById('item-unidade-nivel').value;
-        
+
         // Campos específicos para bebidas
-        const tipoBebida = categoria === 'bebidas' 
-            ? document.getElementById('item-tipo-bebida').value 
+        const tipoBebida = categoria === 'bebidas'
+            ? document.getElementById('item-tipo-bebida').value
             : null;
         const unidadesPorEmbalagem = categoria === 'bebidas'
             ? parseInt(document.getElementById('item-unidades-por-embalagem').value) || 1
             : 1;
-        
+
         // Calcula frete proporcional para bebidas
         const freteProporcional = categoria === 'bebidas' && nivel
             ? this.calcularFreteBebidas(freteBase, nivel, unidadesPorEmbalagem)
             : freteBase;
-        
+
         const item = {
             id: id ? parseInt(id) : App.gerarId(),
             nome: document.getElementById('item-nome').value,
@@ -1261,7 +1280,7 @@ const estoque = {
                 card.classList.add('active');
             }
         });
-        
+
         // Atualiza botões de filtro
         document.querySelectorAll('[data-filter]').forEach(btn => {
             btn.classList.remove('active');
@@ -1269,7 +1288,7 @@ const estoque = {
                 btn.classList.add('active');
             }
         });
-        
+
         // Renderiza com filtro
         this.render(categoria);
     },
@@ -1383,9 +1402,9 @@ const creditos = {
         const listaCaderneta = this.getClientesCaderneta();
         console.log('[renderClientesCaderneta] Clientes encontrados:', Object.keys(listaCaderneta).length);
         const list = document.getElementById('clientes-list');
-        
+
         if (!list) return;
-        
+
         // Se a lista está vazia e temos clientes na caderneta, limpa o empty state
         if (App.data.clientes.length === 0 && Object.keys(listaCaderneta).length > 0) {
             list.innerHTML = '';
@@ -1395,7 +1414,7 @@ const creditos = {
         Object.keys(listaCaderneta).sort().forEach(nome => {
             const cliente = listaCaderneta[nome];
             const saldo = cliente.total_devido || 0;
-            
+
             if (saldo <= 0) return; // Pula clientes quitados
 
             const cardFragment = cloneTemplate('tpl-cliente-card');
@@ -1422,7 +1441,7 @@ const creditos = {
 
             // Adiciona indicador visual de caderneta
             card.style.borderLeft = '4px solid #f59e0b';
-            
+
             // Mostra última compra no card
             const infoEl = document.createElement('div');
             infoEl.style.cssText = 'font-size:0.8rem;color:#64748b;margin-top:0.5rem;';
@@ -1435,17 +1454,17 @@ const creditos = {
                 const btnLancar = actionsContainer.querySelector('[data-action="lancar"]');
                 const btnDelete = actionsContainer.querySelector('[data-action="delete"]');
                 const btnHistorico = actionsContainer.querySelector('[data-action="historico"]');
-                
+
                 // Transforma botão "Lançar" em "Pagar"
                 if (btnLancar) {
                     btnLancar.className = 'btn btn-success';
                     btnLancar.innerHTML = '💰 Pagar';
                     btnLancar.onclick = () => this.abrirPagamentoCaderneta(cliente);
                 }
-                
+
                 // Remove botão delete
                 if (btnDelete) btnDelete.remove();
-                
+
                 // Atualiza botão histórico
                 if (btnHistorico) {
                     btnHistorico.className = 'btn btn-secondary';
@@ -1470,7 +1489,7 @@ const creditos = {
             html += `<p style="color:#64748b;margin:0.25rem 0;">📞 ${cliente.contato}</p>`;
         }
         html += '<hr style="margin:1rem 0;">';
-        
+
         if (cliente.historico && cliente.historico.length > 0) {
             html += '<table style="width:100%;border-collapse:collapse;font-size:0.95rem;">';
             html += '<tr style="background:#f1f5f9;">';
@@ -1479,14 +1498,14 @@ const creditos = {
             html += '<th style="padding:10px 8px;text-align:right;">Valor</th>';
             html += '<th style="padding:10px 8px;text-align:right;">Saldo</th>';
             html += '</tr>';
-            
+
             [...cliente.historico].reverse().forEach(h => {
                 const data = new Date(h.data).toLocaleDateString('pt-BR');
                 const isPagamento = h.tipo === 'pagamento';
                 const cor = isPagamento ? '#16a34a' : '#dc2626';
                 const sinal = isPagamento ? '-' : '+';
                 const icone = isPagamento ? '💰' : '🛒';
-                
+
                 let descricao;
                 if (isPagamento) {
                     descricao = `${icone} ${h.descricao || 'Pagamento'}`;
@@ -1494,10 +1513,10 @@ const creditos = {
                     const itens = h.itens ? h.itens.map(i => `${i.quantidade}x ${i.nome}`).join(', ') : 'Compra';
                     descricao = `${icone} ${itens}`;
                 }
-                
+
                 const valor = isPagamento ? h.valor : (h.total || 0);
                 const saldo = h.novoSaldo !== undefined ? h.novoSaldo : cliente.total_devido;
-                
+
                 html += `<tr style="border-bottom:1px solid #e2e8f0;${isPagamento ? 'background:#f0fdf4;' : ''}">`;
                 html += `<td style="padding:10px 8px;white-space:nowrap;">${data}</td>`;
                 html += `<td style="padding:10px 8px;font-size:0.85rem;max-width:200px;word-wrap:break-word;">${descricao}</td>`;
@@ -1536,7 +1555,7 @@ const creditos = {
         modal.className = 'modal active';
         modal.id = 'modal-pagamento-caderneta';
         modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;';
-        
+
         modal.innerHTML = `
             <div style="background:white;padding:2rem;border-radius:0.5rem;max-width:400px;width:90%;">
                 <h3>💰 Registrar Pagamento</h3>
@@ -1566,19 +1585,19 @@ const creditos = {
                 </div>
             </div>
         `;
-        
+
         document.body.appendChild(modal);
-        
+
         // Foca no input
         setTimeout(() => document.getElementById('valor-pagamento').focus(), 100);
-        
+
         // Preview do novo saldo ao digitar
         document.getElementById('valor-pagamento').addEventListener('input', (e) => {
             const valor = parseFloat(e.target.value) || 0;
             const novoSaldo = Math.max(0, cliente.total_devido - valor);
             const preview = document.getElementById('novo-saldo-preview');
             const previewValor = document.getElementById('novo-saldo-valor');
-            
+
             if (valor > 0) {
                 preview.style.display = 'block';
                 previewValor.textContent = App.formatarMoeda(novoSaldo);
@@ -1587,7 +1606,7 @@ const creditos = {
                 preview.style.display = 'none';
             }
         });
-        
+
         // Fecha ao clicar fora
         modal.addEventListener('click', (e) => {
             if (e.target === modal) modal.remove();
@@ -1600,28 +1619,28 @@ const creditos = {
     registrarPagamentoCaderneta(nomeCliente) {
         const inputValor = document.getElementById('valor-pagamento');
         const valorPagamento = parseFloat(inputValor.value);
-        
+
         // Validações
         if (!valorPagamento || valorPagamento <= 0) {
             alert('Por favor, digite um valor válido maior que zero!');
             inputValor.focus();
             return;
         }
-        
+
         // Recupera dados do cliente
         let listaCaderneta = JSON.parse(localStorage.getItem('lista_caderneta') || '{}');
         const cliente = listaCaderneta[nomeCliente];
-        
+
         if (!cliente) {
             alert('Erro: Cliente não encontrado na caderneta!');
             return;
         }
-        
+
         // Calcula novo saldo (não permite negativo)
         const saldoAnterior = parseFloat(cliente.total_devido) || 0;
         const novoSaldo = Math.max(0, saldoAnterior - valorPagamento);
         const valorEfetivo = Math.min(valorPagamento, saldoAnterior); // Não paga além da dívida
-        
+
         console.log('[Pagamento Caderneta]', {
             cliente: nomeCliente,
             saldoAnterior,
@@ -1629,11 +1648,11 @@ const creditos = {
             valorEfetivo,
             novoSaldo
         });
-        
+
         // Atualiza saldo
         cliente.total_devido = novoSaldo;
         cliente.ultima_atualizacao = new Date().toISOString();
-        
+
         // Adiciona ao histórico
         if (!cliente.historico) cliente.historico = [];
         cliente.historico.push({
@@ -1644,20 +1663,20 @@ const creditos = {
             saldoAnterior: saldoAnterior,
             novoSaldo: novoSaldo
         });
-        
+
         // Salva no localStorage
         localStorage.setItem('lista_caderneta', JSON.stringify(listaCaderneta));
-        
+
         // Fecha modal
         document.getElementById('modal-pagamento-caderneta').remove();
-        
+
         // Mensagem de confirmação
         if (novoSaldo === 0) {
             alert(`✅ Pagamento registrado!\n\nCliente: ${nomeCliente}\nValor pago: ${App.formatarMoeda(valorEfetivo)}\n\n🎉 CONTA QUITADA!`);
         } else {
             alert(`✅ Pagamento registrado!\n\nCliente: ${nomeCliente}\nValor pago: ${App.formatarMoeda(valorEfetivo)}\nSaldo restante: ${App.formatarMoeda(novoSaldo)}`);
         }
-        
+
         // Atualiza a tela
         this.render();
     },
@@ -1673,7 +1692,7 @@ const creditos = {
                 const tipoClass = l.tipo;
                 const tipoText = { venda: 'Venda', pagamento: 'Pagamento', troca: 'Troca' }[l.tipo];
                 const valorClass = l.tipo === 'venda' ? '' : 'text-success';
-                
+
                 return `
                     <div class="lancamento-item">
                         <div>
@@ -1708,7 +1727,7 @@ const creditos = {
 
     salvarCliente(e) {
         e.preventDefault();
-        
+
         const id = document.getElementById('cliente-id').value;
         const cliente = {
             id: id ? parseInt(id) : App.gerarId(),
@@ -1752,7 +1771,7 @@ const creditos = {
 
     salvarLancamento(e) {
         e.preventDefault();
-        
+
         const clienteId = parseInt(document.getElementById('lancamento-cliente-id').value);
         const cliente = App.data.clientes.find(c => c.id === clienteId);
         if (!cliente) return;
@@ -1793,15 +1812,15 @@ const vendas = {
 
     setupBotoesVenda() {
         console.log('[setupBotoesVenda] Configurando event listeners...');
-        
+
         const btnFinalizar = document.getElementById('btn-finalizar-venda');
         const btnCaderneta = document.getElementById('btn-caderneta');
         const btnLimpar = document.getElementById('btn-limpar-carrinho');
-        
+
         console.log('[setupBotoesVenda] btnFinalizar:', btnFinalizar);
         console.log('[setupBotoesVenda] btnCaderneta:', btnCaderneta);
         console.log('[setupBotoesVenda] btnLimpar:', btnLimpar);
-        
+
         if (btnFinalizar) {
             btnFinalizar.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -1812,7 +1831,7 @@ const vendas = {
         } else {
             console.error('[setupBotoesVenda] ERRO: btn-finalizar-venda não encontrado!');
         }
-        
+
         if (btnCaderneta) {
             btnCaderneta.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -1823,7 +1842,7 @@ const vendas = {
         } else {
             console.error('[setupBotoesVenda] ERRO: btn-caderneta não encontrado!');
         }
-        
+
         if (btnLimpar) {
             btnLimpar.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -1855,23 +1874,23 @@ const vendas = {
     renderProdutos(filtro = this.filtroAtual) {
         this.filtroAtual = filtro;
         const grid = document.getElementById('produtos-venda-grid');
-        
+
         // DEBUG: Log de dados no módulo vendas
         console.log('[DEBUG VENDAS] Total itens disponíveis:', App.data.itens.length);
         console.log('[DEBUG VENDAS] Bebidas disponíveis:', App.data.itens.filter(i => i.categoria === 'bebidas' && i.quantidade > 0).length);
-        
-        let itens = App.data.itens.filter(i => 
+
+        let itens = App.data.itens.filter(i =>
             i.categoria !== 'producao' && i.quantidade > 0
         );
-        
+
         if (filtro !== 'todos') {
             itens = itens.filter(i => i.categoria === filtro);
         }
-        
+
         // DEBUG: Log após filtro
         console.log('[DEBUG VENDAS] Filtro:', filtro);
         console.log('[DEBUG VENDAS] Itens a exibir:', itens.length);
-        
+
         itens.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 
         if (itens.length === 0) {
@@ -1893,12 +1912,12 @@ const vendas = {
             const noCarrinho = this.carrinho.find(c => c.id === item.id);
             const qtdNoCarrinho = noCarrinho ? noCarrinho.quantidade : 0;
             const disponivel = item.quantidade - qtdNoCarrinho;
-            
+
             const cardFragment = cloneTemplate('tpl-produto-venda');
             if (!cardFragment) return;
 
             const card = cardFragment.querySelector('[data-card]');
-            
+
             fillDataAttributes(card, {
                 categoria: categorias[item.categoria] || item.categoria,
                 nome: item.nome,
@@ -1920,7 +1939,7 @@ const vendas = {
 
     renderCarrinho() {
         const container = document.getElementById('carrinho-itens');
-        
+
         if (this.carrinho.length === 0) {
             renderEmptyState('carrinho-itens', '🛒', 'Carrinho vazio');
         } else {
@@ -1930,7 +1949,7 @@ const vendas = {
                 if (!itemFragment) return;
 
                 const itemEl = itemFragment.querySelector('[data-item]');
-                
+
                 fillDataAttributes(itemEl, {
                     nome: item.nome,
                     'preco-unit': App.formatarMoeda(item.preco) + ' un',
@@ -1961,7 +1980,7 @@ const vendas = {
 
         const noCarrinho = this.carrinho.find(c => c.id === id);
         const qtdNoCarrinho = noCarrinho ? noCarrinho.quantidade : 0;
-        
+
         if (qtdNoCarrinho >= item.quantidade) {
             alert('Quantidade indisponível em estoque!');
             return;
@@ -1985,11 +2004,11 @@ const vendas = {
     alterarQuantidade(id, delta) {
         const itemCarrinho = this.carrinho.find(c => c.id === id);
         const itemEstoque = App.data.itens.find(i => i.id === id);
-        
+
         if (!itemCarrinho) return;
 
         const novaQtd = itemCarrinho.quantidade + delta;
-        
+
         if (novaQtd <= 0) {
             this.removerDoCarrinho(id);
             return;
@@ -2014,7 +2033,7 @@ const vendas = {
     limparCarrinho() {
         if (this.carrinho.length === 0) return;
         if (!confirm('Limpar todo o carrinho?')) return;
-        
+
         this.carrinho = [];
         this.renderCarrinho();
         this.renderProdutos();
@@ -2022,12 +2041,12 @@ const vendas = {
 
     atualizarSelectClientes() {
         const select = document.getElementById('venda-cliente');
-        
+
         // Limpa todas as opções exceto a primeira
         while (select.options.length > 1) {
             select.remove(1);
         }
-        
+
         App.data.clientes.forEach(cliente => {
             const option = document.createElement('option');
             option.value = cliente.id;
@@ -2041,7 +2060,7 @@ const vendas = {
         console.log('[finalizarVenda] naCaderneta:', naCaderneta);
         console.log('[finalizarVenda] this.carrinho:', this.carrinho);
         console.log('[finalizarVenda] this.carrinho.length:', this.carrinho.length);
-        
+
         if (this.carrinho.length === 0) {
             console.log('[finalizarVenda] Carrinho vazio - abortando');
             alert('Carrinho vazio!');
@@ -2072,7 +2091,7 @@ const vendas = {
         console.log('[abrirModalCaderneta] Iniciando...');
         const total = this.carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
         const resumoDiv = document.getElementById('caderneta-resumo');
-        
+
         // Preenche resumo da venda
         resumoDiv.innerHTML = `
             <div style="margin-bottom:0.5rem;"><strong>Total:</strong> ${App.formatarMoeda(total)}</div>
@@ -2080,18 +2099,18 @@ const vendas = {
                 ${this.carrinho.map(i => `${i.quantidade}x ${i.nome}`).join('<br>')}
             </div>
         `;
-        
+
         // Carrega clientes existentes no dropdown
         this.carregarClientesCaderneta();
-        
+
         // Reseta para modo 'existente'
         this.modoCaderneta('existente');
-        
+
         // Limpa campos
         document.getElementById('caderneta-nome').value = '';
         document.getElementById('caderneta-contato').value = '';
         document.getElementById('caderneta-cliente-select').value = '';
-        
+
         // Abre modal
         const modal = document.getElementById('modal-caderneta-cliente');
         modal.classList.add('active');
@@ -2104,10 +2123,10 @@ const vendas = {
     carregarClientesCaderneta() {
         const select = document.getElementById('caderneta-cliente-select');
         const listaCaderneta = JSON.parse(localStorage.getItem('lista_caderneta') || '{}');
-        
+
         // Limpa opções exceto a primeira
         select.innerHTML = '<option value="">-- Selecione um cliente --</option>';
-        
+
         // Adiciona clientes existentes
         const clientes = Object.keys(listaCaderneta).sort();
         clientes.forEach(nome => {
@@ -2117,7 +2136,7 @@ const vendas = {
             option.textContent = `${nome} (Devendo: ${App.formatarMoeda(cliente.total_devido)})`;
             select.appendChild(option);
         });
-        
+
         console.log('[carregarClientesCaderneta] Clientes carregados:', clientes.length);
     },
 
@@ -2126,15 +2145,15 @@ const vendas = {
      */
     modoCaderneta(modo) {
         console.log('[modoCaderneta] Modo:', modo);
-        
+
         const tabExistente = document.getElementById('tab-existente');
         const tabNovo = document.getElementById('tab-novo');
         const divExistente = document.getElementById('modo-existente');
         const divNovo = document.getElementById('modo-novo');
         const inputModo = document.getElementById('caderneta-modo');
-        
+
         inputModo.value = modo;
-        
+
         if (modo === 'existente') {
             tabExistente.classList.add('active');
             tabNovo.classList.remove('active');
@@ -2165,42 +2184,42 @@ const vendas = {
     salvarVendaCaderneta(e) {
         e.preventDefault();
         console.log('[salvarVendaCaderneta] Iniciando salvamento...');
-        
+
         const modo = document.getElementById('caderneta-modo').value;
         console.log('[salvarVendaCaderneta] Modo selecionado:', modo);
-        
+
         let nome, contato;
-        
+
         if (modo === 'existente') {
             // Fluxo: selecionar cliente existente
             const select = document.getElementById('caderneta-cliente-select');
             nome = select.value;
-            
+
             if (!nome) {
                 alert('Por favor, selecione um cliente da lista!\n\nSe for novo cliente, clique em "Novo Cliente".');
                 select.focus();
                 return;
             }
-            
+
             // Busca contato do cliente existente
             const listaCaderneta = JSON.parse(localStorage.getItem('lista_caderneta') || '{}');
             contato = listaCaderneta[nome]?.contato || '';
-            
+
             console.log('[salvarVendaCaderneta] Cliente existente:', nome, contato);
         } else {
             // Fluxo: novo cadastro
             nome = document.getElementById('caderneta-nome').value.trim();
             contato = document.getElementById('caderneta-contato').value.trim();
-            
+
             if (!nome) {
                 alert('Por favor, informe o nome do cliente!');
                 document.getElementById('caderneta-nome').focus();
                 return;
             }
-            
+
             console.log('[salvarVendaCaderneta] Novo cliente:', nome, contato);
         }
-        
+
         // Processa a venda na caderneta
         this.processarFinalizacaoVenda(true, null, { nome, contato });
         this.fecharModalCaderneta();
@@ -2234,8 +2253,8 @@ const vendas = {
         if (resultadoBaixa.alertas.length > 0) {
             const mensagensAlerta = resultadoBaixa.alertas.map(a => a.mensagem).join('\n\n');
             setTimeout(() => {
-                alert('🚨 ALERTAS DE ESTOQUE CRÍTICO GERADOS:\n\n' + mensagensAlerta + 
-                      '\n\nVerifique o painel de alertas no topo da página.');
+                alert('🚨 ALERTAS DE ESTOQUE CRÍTICO GERADOS:\n\n' + mensagensAlerta +
+                    '\n\nVerifique o painel de alertas no topo da página.');
             }, 100);
         }
 
@@ -2243,17 +2262,17 @@ const vendas = {
         if (naCaderneta && dadosCliente) {
             // Recupera ou cria objeto de clientes na caderneta (estrutura: { nome: { dados } })
             let listaCaderneta = JSON.parse(localStorage.getItem('lista_caderneta') || '{}');
-            
+
             const nomeCliente = dadosCliente.nome.trim();
             const agora = new Date().toISOString();
-            
+
             // Se cliente já existe, acumula o valor. Se não, cria novo
             if (listaCaderneta[nomeCliente]) {
                 // Cliente existente - acumula valores
                 listaCaderneta[nomeCliente].total_devido += total;
                 listaCaderneta[nomeCliente].ultima_atualizacao = agora;
                 listaCaderneta[nomeCliente].contato = dadosCliente.contato || listaCaderneta[nomeCliente].contato;
-                
+
                 // Adiciona ao histórico de compras
                 listaCaderneta[nomeCliente].historico.push({
                     data: agora,
@@ -2265,7 +2284,7 @@ const vendas = {
                     })),
                     total: total
                 });
-                
+
                 console.log('[Caderneta] Cliente existente - valor acumulado:', listaCaderneta[nomeCliente].total_devido);
             } else {
                 // Novo cliente
@@ -2285,13 +2304,13 @@ const vendas = {
                         total: total
                     }]
                 };
-                
+
                 console.log('[Caderneta] Novo cliente criado:', nomeCliente);
             }
-            
+
             // Salva no localStorage
             localStorage.setItem('lista_caderneta', JSON.stringify(listaCaderneta));
-            
+
             console.log('[Caderneta] Salvo no localStorage. Total clientes:', Object.keys(listaCaderneta).length);
             console.log('[Caderneta] Dados do cliente:', listaCaderneta[nomeCliente]);
         }
@@ -2301,7 +2320,7 @@ const vendas = {
             const cliente = App.data.clientes.find(c => c.id === parseInt(clienteId));
             if (cliente) {
                 if (!cliente.lancamentos) cliente.lancamentos = [];
-                
+
                 const descricao = this.carrinho.map(i => `${i.quantidade}x ${i.nome}`).join(', ');
                 cliente.lancamentos.push({
                     data: new Date().toISOString(),
@@ -2339,14 +2358,14 @@ const vendas = {
         this.carrinho = [];
         this.renderCarrinho();
         this.renderProdutos();
-        
+
         console.log('[Venda] Atualizando tela de créditos/caderneta...');
         creditos.render();
         console.log('[Venda] Tela de créditos atualizada!');
-        
+
         estoque.render();
         App.salvarDados();
-        
+
         // Mostra mensagem de confirmação
         if (naCaderneta) {
             // Busca o total acumulado do cliente
@@ -2354,7 +2373,7 @@ const vendas = {
             const clienteData = listaCaderneta[dadosCliente.nome];
             const totalAcumulado = clienteData ? clienteData.total_devido : total;
             const isNovoCliente = clienteData && clienteData.historico && clienteData.historico.length === 1;
-            
+
             if (isNovoCliente) {
                 alert(`✅ Nova caderneta criada!\n\nCliente: ${dadosCliente.nome}\nTotal devido: ${App.formatarMoeda(total)}`);
             } else {
@@ -2373,7 +2392,7 @@ const vendas = {
         if (!notaFragment) return;
 
         const nota = notaFragment.querySelector('.nota-fiscal');
-        
+
         // Preenche data e hora
         nota.querySelector('[data-data]').textContent = `Nota: #${numNota} - ${data.toLocaleDateString('pt-BR')} ${data.toLocaleTimeString('pt-BR')}`;
         nota.querySelector('[data-hora]').textContent = data.toLocaleString('pt-BR');
@@ -2419,19 +2438,19 @@ const vendas = {
         this.carrinho.forEach(item => {
             const rowFragment = cloneTemplate('tpl-nota-item-row');
             if (!rowFragment) return;
-            
+
             const row = rowFragment.querySelector('[data-row]');
             fillDataAttributes(row, {
                 nome: item.nome,
                 qtd: item.quantidade,
                 unit: App.formatarMoeda(item.preco),
-                total: App.formatarMoeda(item.preco * item.quantidade)
+                'total-item': App.formatarMoeda(item.preco * item.quantidade)
             });
             tbody.appendChild(rowFragment);
         });
 
-        // Preenche total
-        nota.querySelector('[data-total]').textContent = App.formatarMoeda(total);
+        // Preenche total geral
+        nota.querySelector('[data-total-geral]').textContent = App.formatarMoeda(total);
 
         document.getElementById('nota-conteudo').innerHTML = '';
         document.getElementById('nota-conteudo').appendChild(notaFragment);
@@ -2445,7 +2464,7 @@ const vendas = {
     imprimirNota() {
         const conteudo = document.getElementById('nota-conteudo').innerHTML;
         const janela = window.open('', '_blank', 'width=500,height=700');
-        
+
         janela.document.write(`
             <!DOCTYPE html>
             <html>
@@ -2480,7 +2499,7 @@ const vendas = {
             </body>
             </html>
         `);
-        
+
         janela.document.close();
         janela.print();
     }
@@ -2510,13 +2529,13 @@ const relatorios = {
         const hoje = new Date();
         const mesAtual = hoje.getMonth();
         const anoAtual = hoje.getFullYear();
-        
+
         // Filtra vendas do mês atual
         const vendasDoMes = App.data.historicoVendas.filter(venda => {
             const dataVenda = new Date(venda.data);
             return dataVenda.getMonth() === mesAtual && dataVenda.getFullYear() === anoAtual;
         });
-        
+
         // Se não houver vendas no mês
         if (vendasDoMes.length === 0) {
             return {
@@ -2526,10 +2545,10 @@ const relatorios = {
                 mensagem: 'Nenhuma venda registrada neste mês.'
             };
         }
-        
+
         // Agrupa por produto e soma quantidades
         const produtosVendidos = {};
-        
+
         vendasDoMes.forEach(venda => {
             venda.itens.forEach(item => {
                 if (!produtosVendidos[item.id]) {
@@ -2543,11 +2562,11 @@ const relatorios = {
                 produtosVendidos[item.id].quantidade += item.quantidade;
             });
         });
-        
+
         // Converte para array e ordena por quantidade (maior primeiro)
         const listaOrdenada = Object.values(produtosVendidos)
             .sort((a, b) => b.quantidade - a.quantidade);
-        
+
         return {
             periodo: this.formatarPeriodo(mesAtual, anoAtual),
             itens: listaOrdenada,
@@ -2555,7 +2574,7 @@ const relatorios = {
             mensagem: null
         };
     },
-    
+
     // Formata o período para exibição
     formatarPeriodo(mes, ano) {
         const meses = [
@@ -2564,7 +2583,7 @@ const relatorios = {
         ];
         return `${meses[mes]} de ${ano}`;
     },
-    
+
     // Renderiza a lista de reposição na tabela (modal)
     renderizarListaReposicao() {
         const dados = this.gerarListaReposicao();
@@ -2572,24 +2591,24 @@ const relatorios = {
         const periodoEl = document.getElementById('reposicao-periodo');
         const totalEl = document.getElementById('reposicao-total-vendas');
         const vazioEl = document.getElementById('reposicao-vazio');
-        
+
         if (!tbody || !periodoEl) return;
-        
+
         // Atualiza cabeçalho
         periodoEl.textContent = dados.periodo;
         if (totalEl) totalEl.textContent = dados.totalVendas;
-        
+
         // Limpa tabela
         tbody.innerHTML = '';
-        
+
         // Mostra mensagem se vazio
         if (dados.itens.length === 0) {
             if (vazioEl) vazioEl.style.display = 'block';
             return;
         }
-        
+
         if (vazioEl) vazioEl.style.display = 'none';
-        
+
         // Preenche tabela usando template
         dados.itens.forEach(item => {
             const row = document.createElement('tr');
@@ -2609,31 +2628,31 @@ const relatorios = {
         const totalEl = document.getElementById('reposicao-page-total');
         const vazioEl = document.getElementById('reposicao-page-vazio');
         const conteudoEl = document.getElementById('reposicao-page-conteudo');
-        
+
         if (!tbody || !periodoEl) {
             console.log('[Reposição Página] Elementos não encontrados');
             return;
         }
-        
+
         console.log('[Reposição Página] Renderizando', dados.itens.length, 'itens');
-        
+
         // Atualiza cabeçalho
         periodoEl.textContent = dados.periodo;
         if (totalEl) totalEl.textContent = dados.totalVendas;
-        
+
         // Limpa tabela
         tbody.innerHTML = '';
-        
+
         // Mostra mensagem se vazio
         if (dados.itens.length === 0) {
             if (vazioEl) vazioEl.style.display = 'block';
             if (conteudoEl) conteudoEl.style.display = 'none';
             return;
         }
-        
+
         if (vazioEl) vazioEl.style.display = 'none';
         if (conteudoEl) conteudoEl.style.display = 'block';
-        
+
         // Preenche tabela com categoria
         dados.itens.forEach(item => {
             const row = document.createElement('tr');
@@ -2651,7 +2670,7 @@ const relatorios = {
     atualizarListaReposicao() {
         console.log('[Reposição] Atualizando lista...');
         this.renderizarListaReposicaoPagina();
-        
+
         const dados = this.gerarListaReposicao();
         if (dados.itens.length > 0) {
             alert(`✅ Lista atualizada!\n\nPeríodo: ${dados.periodo}\nTotal de itens: ${dados.itens.length}\nUnidades vendidas: ${dados.totalVendas}`);
@@ -2663,12 +2682,12 @@ const relatorios = {
     // Imprime a lista de reposição da página
     imprimirListaReposicao() {
         const dados = this.gerarListaReposicao();
-        
+
         if (dados.itens.length === 0) {
             alert('Não há itens para imprimir. Realize vendas primeiro.');
             return;
         }
-        
+
         // Cria conteúdo para impressão
         let html = `
             <html>
@@ -2720,23 +2739,23 @@ const relatorios = {
             </body>
             </html>
         `;
-        
+
         // Abre em nova janela para impressão
         const janela = window.open('', '_blank');
         janela.document.write(html);
         janela.document.close();
     },
-    
+
     // Abre o modal de lista de reposição
     abrirModal() {
         this.renderizarListaReposicao();
-        
+
         const modal = document.getElementById('modal-reposicao');
         if (modal) {
             modal.classList.add('active');
         }
     },
-    
+
     // Fecha o modal
     fecharModal() {
         const modal = document.getElementById('modal-reposicao');
@@ -2744,12 +2763,12 @@ const relatorios = {
             modal.classList.remove('active');
         }
     },
-    
+
     // Imprime a lista de reposição
     imprimirLista() {
         const conteudo = document.getElementById('reposicao-conteudo');
         if (!conteudo) return;
-        
+
         const janela = window.open('', '_blank', 'width=600,height=700');
         janela.document.write(`
             <!DOCTYPE html>
@@ -2800,7 +2819,7 @@ const relatorios = {
             </body>
             </html>
         `);
-        
+
         janela.document.close();
         janela.print();
     }
@@ -3077,7 +3096,7 @@ const barcodeScanner = {
 
 // Inicializa o scanner quando o App inicia
 const originalInit = App.init.bind(App);
-App.init = function() {
+App.init = function () {
     originalInit();
     barcodeScanner.init();
 };
@@ -3088,15 +3107,16 @@ App.init = function() {
 
 // Atualiza estoque.salvar() para incluir código de barras
 const originalEstoqueSalvar = estoque.salvar.bind(estoque);
-estoque.salvar = async function(event) {
+estoque.salvar = async function (event) {
     event.preventDefault();
 
     const id = document.getElementById('item-id').value;
-    const codigoBarras = document.getElementById('item-codigo-barras').value.trim();
+    const codigoBarrasInput = document.getElementById('item-codigo-barras');
+    const codigoBarras = codigoBarrasInput ? codigoBarrasInput.value.trim() : null;
 
     const item = {
         nome: document.getElementById('item-nome').value,
-        codigo_barras: codigoBarras || null,
+        codigo_barras: codigoBarras,
         categoria: document.getElementById('item-categoria').value,
         quantidade: parseInt(document.getElementById('item-quantidade').value),
         custo: parseFloat(document.getElementById('item-custo').value),
@@ -3131,9 +3151,14 @@ estoque.salvar = async function(event) {
     }
 
     if (id) {
-        const index = App.data.itens.findIndex(i => i.id == id);
+        const index = App.data.itens.findIndex(i => i.id === parseInt(id));
         if (index !== -1) {
-            App.data.itens[index] = { ...App.data.itens[index], ...item };
+            // Mantém campos existentes e atualiza apenas os fornecidos
+            App.data.itens[index] = {
+                ...App.data.itens[index],
+                ...item,
+                id: parseInt(id) // Garante que o ID permanece como número
+            };
         }
     } else {
         item.id = Math.max(...App.data.itens.map(i => i.id), 0) + 1;
@@ -3151,14 +3176,20 @@ estoque.salvar = async function(event) {
 
 // Atualiza estoque.editar() para preencher código de barras
 const originalEstoqueEditar = estoque.editar.bind(estoque);
-estoque.editar = function(id) {
+estoque.editar = function (id) {
     const item = App.data.itens.find(i => i.id === id);
     if (!item) return;
 
     document.getElementById('modal-item-title').textContent = 'Editar Item';
     document.getElementById('item-id').value = item.id;
     document.getElementById('item-nome').value = item.nome;
-    document.getElementById('item-codigo-barras').value = item.codigo_barras || '';
+
+    // Tenta preencher código de barras se o campo existir
+    const codigoBarrasInput = document.getElementById('item-codigo-barras');
+    if (codigoBarrasInput) {
+        codigoBarrasInput.value = item.codigo_barras || '';
+    }
+
     document.getElementById('item-categoria').value = item.categoria;
     document.getElementById('item-quantidade').value = item.quantidade;
     document.getElementById('item-custo').value = item.custo;
@@ -3200,7 +3231,7 @@ document.addEventListener('click', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('[DOMContentLoaded] Inicializando App...');
     App.init();
-    
+
     // Fallback: garante que botões de venda tenham event listeners
     setTimeout(() => {
         console.log('[Fallback] Verificando botões de venda...');
@@ -3220,7 +3251,7 @@ window.barcodeScanner = barcodeScanner;
 console.log('[FLOR DO LUAR] Objetos expostos: vendas=', !!window.vendas, 'finalizarVenda=', typeof window.vendas?.finalizarVenda);
 
 // Função de teste para debug
-window.testarBotoesVenda = function() {
+window.testarBotoesVenda = function () {
     console.log('=== TESTE DE BOTÕES ===');
     console.log('btn-finalizar-venda:', document.getElementById('btn-finalizar-venda'));
     console.log('btn-caderneta:', document.getElementById('btn-caderneta'));

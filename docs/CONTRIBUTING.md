@@ -3,7 +3,7 @@
   PROPRIETÁRIO: Mauricio Spark
   MARCA:        SparkMauricio
   PROJETO:      Flor Do Luar
-  VERSÃO:       v1.0.0
+  VERSÃO:       v2.0.0
   LINHAGEM:     SPARK
   ============================================================================
   Documento de Planejamento de Escopo

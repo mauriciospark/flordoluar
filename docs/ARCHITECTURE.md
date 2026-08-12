@@ -3,7 +3,7 @@
   PROPRIETÁRIO: Mauricio Spark
   MARCA:        SparkMauricio
   PROJETO:      Flor Do Luar
-  VERSÃO:       v1.0.0
+  VERSÃO:       v2.0.0
   LINHAGEM:     SPARK
   ============================================================================
   Documento de Planejamento de Escopo
@@ -85,7 +85,7 @@ const DataManager = {
 
 #### LocalStorage (Armazenamento Principal)
 - **Estrutura de Dados**: Objeto JSON serializado
-- **Chave de Armazenamento**: `flutogrande-data`
+- **Chave de Armazenamento**: `flordoluar-data`
 - **Capacidade**: ~5-10MB (dependendo do navegador)
 - **Persistência**: Permanente até limpeza manual do cache
 
