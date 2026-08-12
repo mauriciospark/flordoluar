@@ -1,15 +1,3 @@
-/*
-  ============================================================================
-  PROPRIETÁRIO: Mauricio Spark
-  MARCA:        SparkMauricio
-  PROJETO:      Flor do Luar
-  VERSÃO:       v1.0.0
-  LINHAGEM:     SPARK
-  ============================================================================
-  Documento de Planejamento de Escopo
-  COPYRIGHT: © 2026 / Mauricio Spark. Todos os direitos reservados.
-  ============================================================================
-*/
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
